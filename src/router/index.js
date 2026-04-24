@@ -137,6 +137,13 @@ export const StaticRouterMap = [{
     meta: {
       title: '订单完成情况'
     }
+  },{
+    path: 'processAcceptance',
+    component: () => import('@/views/reportForm/processAcceptance/index'),
+    name: 'ProcessAcceptance',
+    meta: {
+      title: '工序接收情况'
+    }
   }
   ]
 }

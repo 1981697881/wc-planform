@@ -195,6 +195,7 @@ export default {
         { text: '活动家具', name: 'movableSuit' },
         { text: '其他', name: 'other' },
         {text: '最后更新日期', name: 'updateTime'},
+        {text: '备注', name: 'itemDesc' }
 
       ],
       logoPath: '', // 动态设置

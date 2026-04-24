@@ -43,6 +43,18 @@ export function poReport(params, query) {
     method: 'POST',
     data: query
   })
+}// 报表管理-工序接收情况报表
+export function processRecReportByPage(params, query) {
+  const url = '/prodProcess/processRecReportByPage/' + params.pageNum + '/' + params.pageSize
+  return request({
+    url: url,
+    headers: {
+      'authorization': getToken('wcrx'),
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    data: query
+  })
 }
 // 报表管理-工序流转进度查看
 export function processSRReport(params, query) {

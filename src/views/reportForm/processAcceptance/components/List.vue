@@ -18,7 +18,7 @@
 <script>
 import { mapGetters } from "vuex";
 import List from "@/components/List";
-import { poReport } from '@/api/reportForm/index'
+import { processRecReportByPage } from '@/api/reportForm/index'
 export default {
   components: {
     List
@@ -31,24 +31,16 @@ export default {
       loading: false,
       list: {},
       columns: [
-        { text: "订单日期", name: "orderDate" },
         { text: "订单号", name: "poNo" },
         { text: "子订单号", name: "poSubNo" },
         { text: "产品编码", name: "itemNumber" },
         { text: "产品名称", name: "itemName" },
         { text: "产品规格", name: "itemSpec"},
-        { text: "产品数量", name: "prodQty"},
-        { text: "开工日期", name: "startDate"},
-        { text: "总装日期", name: "assemblyDate"},
-        { text: "总装图片", name: "faPhotoFiles", default: 'images'},
-        { text: "打包日期", name: "packageDate"},
-        { text: "包数", name: "prodQty"},
-        { text: "包装箱号", name: "boxNo"},
-        { text: "发货日期", name: "sendOutDate"},
-        { text: "发货包数", name: "sendOutPackageQty"},
-        { text: "物流单号", name: "expressNo"},
-        { text: "总装备注", name: "faNote"},
-        { text: "发货备注", name: "sendNote"},
+        { text: "备料车间", name: "备料车间"},
+        { text: "木工车间", name: "木工车间"},
+        { text: "粗磨工序", name: "粗磨工序"},
+        { text: "细磨上油工序", name: "细磨上油工序"},
+        { text: "总装工序", name: "总装工序"},
       ]
     };
   },
@@ -67,7 +59,7 @@ export default {
         const list = this.list.records
         const data = this.formatJson(filterVal, list);
         // 这里还是使用export_json_to_excel方法比较好，方便操作数据
-        excel.export_json_to_excel(tHeader,data,'订单完成情况报表')
+        excel.export_json_to_excel(tHeader,data,'工序接收情况报表')
       })
     },
     formatJson(filter, jsonDate){
@@ -113,7 +105,7 @@ export default {
       pageSize: this.list.size || 50
     }) {
       this.loading = false
-      poReport(data, val).then(res => {
+      processRecReportByPage(data, val).then(res => {
         this.loading = false
         this.list = res.data
       });
