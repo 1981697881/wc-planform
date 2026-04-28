@@ -33,12 +33,12 @@ export default {
       columns: [
         { text: "订单号", name: "poNo" },
         { text: "子订单号", name: "poSubNo" },
-        { text: "产品编码", name: "itemNumber" },
         { text: "产品名称", name: "itemName" },
-        { text: "产品规格", name: "itemSpec"},
-        { text: "备料车间", name: "备料车间"},
-        { text: "木工车间", name: "木工车间"},
+        { text: "备料工序", name: "备料工序"},
+        { text: "木工工序", name: "木工工序"},
         { text: "粗磨工序", name: "粗磨工序"},
+        { text: "晒板工序", name: "晒板工序"},
+        { text: "细磨蜡油工序", name: "细磨蜡油工序"},
         { text: "细磨上油工序", name: "细磨上油工序"},
         { text: "总装工序", name: "总装工序"},
       ]

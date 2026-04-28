@@ -52,7 +52,8 @@ export const StaticRouterMap = [{
       affix: true
     }
   }]
-}, {
+},
+  /*{
   path: '/basic',
   component: Layout,
   name: 'Basic',
@@ -146,7 +147,7 @@ export const StaticRouterMap = [{
     }
   }
   ]
-}
+}*/
 ]
 
 const createRouter = () => new Router({

@@ -140,7 +140,7 @@ export function getUsersInfo(params) {
 // 权限按钮-查找
 export function getByUserAndPrId(params) {
   return request({
-   url: '/sys-menu/getByUserAndPrId/' + params,
+   url: '/sysMenu/getByUserAndPrId/' + params,
     headers: {
       'authorization': getToken('wcrx')
     },

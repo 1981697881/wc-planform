@@ -11,10 +11,10 @@
           <el-button :size="'mini'" type="primary" icon="el-icon-search" @click="query">查询</el-button>
         </el-col>
         <el-button-group style="float:right">
-          <!--<el-button v-for="(t,i) in btnList" :key="i" v-if="t.category == 'default'" :size="'mini'" type="primary" :icon="t.cuicon" @click="onFun(t.path)">{{t.menuName}}</el-button>-->
-          <el-button :size="'mini'" type="primary" icon="el-icon-plus" @click="handlerAdd">新增</el-button>
+          <el-button v-for="(t,i) in btnList" :key="i" v-if="t.category == 'default'" :size="'mini'" type="primary" :icon="t.cuicon" @click="onFun(t.path)">{{t.menuName}}</el-button>
+          <!--<el-button :size="'mini'" type="primary" icon="el-icon-plus" @click="handlerAdd">新增</el-button>
           <el-button :size="'mini'" type="primary" icon="el-icon-edit" @click="handlerAlter">修改</el-button>
-          <el-button :size="'mini'" type="primary" icon="el-icon-delete" @click="Delivery">删除</el-button>
+          <el-button :size="'mini'" type="primary" icon="el-icon-delete" @click="Delivery">删除</el-button>-->
           <!--<el-button :size="'mini'" type="primary" icon="el-icon-error" @click="disable" >禁用</el-button>
           <el-button :size="'mini'" type="primary" icon="el-icon-success" @click="enable" >启用</el-button>-->
           <el-button :size="'mini'" type="primary" icon="el-icon-refresh" @click="upload">刷新</el-button>
@@ -41,16 +41,39 @@ export default {
     };
   },
   mounted() {
-    /*let path = this.$route.meta.id
+    let path = this.$route.meta.id
     getByUserAndPrId(path).then(res => {
       this.btnList = res.data
       this.$forceUpdate();
-    });*/
+    });
   },
   methods: {
-    onFun(method) {
-      console.log(method)
-      this[method]()
+    onFun(methodStr, event) {
+      // 匹配 "methodName(param1,param2,...)" 格式
+      const match = methodStr.match(/^(\w+)\((.*)\)$/);
+      if (match) {
+        const methodName = match[1];
+        const argsString = match[2];
+        // 将参数解析为数组（按逗号分割，简单处理数字/布尔/字符串）
+        let args = argsString ? argsString.split(',').map(arg => arg.trim()) : [];
+        args = args.map(arg => {
+          // 尝试转换为数字
+          const num = Number(arg);
+          if (!isNaN(num)) return num;
+          // 尝试转换布尔
+          if (arg === 'true') return true;
+          if (arg === 'false') return false;
+          // 去掉可能的引号（单引号或双引号）
+          if ((arg.startsWith("'") && arg.endsWith("'")) || (arg.startsWith('"') && arg.endsWith('"')))
+            return arg.slice(1, -1);
+          return arg;
+        });
+        // 调用方法，将解析的参数和事件一起传递（事件可选，放在最后）
+        this[methodName](...args, event);
+      } else {
+        // 普通方法名：直接调用，传入事件
+        this[methodStr](event);
+      }
     },
     Delivery() {
       if (this.clickData.id) {

@@ -10,7 +10,7 @@ export function getRouter(userId) {
     headers: {
       'authorization': getToken('wcrx'),
     },
-   url: '/sys-menu/getByUser',
+   url: '/sysMenu/getByUser',
     method: 'get',
   })
 }

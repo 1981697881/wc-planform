@@ -8,6 +8,7 @@ const map = {
   '/basic': () => import('@/layout'),
   'material': () => import('@/views/basic/material'),
   'customer': () => import('@/views/basic/customer'),
+  'users': () => import('@/views/system/users'),
 
   'packaging': () => import('@/views/information/packaging'),
   'processList': () => import('@/views/information/processList'),
@@ -15,9 +16,6 @@ const map = {
 
   'processFlow': () => import('@/views/reportForm/processFlow'),
   'orderCompleted': () => import('@/views/reportForm/orderCompleted'),
-  'bonusSummary': () => import('@/views/reportForm/bonusSummary'),
-  'incomeDetail': () => import('@/views/reportForm/incomeDetail'),
-  'outsourcingBonusDetails': () => import('@/views/reportForm/outsourcingBonusDetails'),
-  'outsourcingBonusSummary': () => import('@/views/reportForm/outsourcingBonusSummary'),
+  'processAcceptance': () => import('@/views/reportForm/processAcceptance'),
 
 }

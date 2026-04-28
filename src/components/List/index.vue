@@ -57,7 +57,7 @@
           align="center"
         >
           <template slot-scope="scope">
-            <!-- 单图：值存在且为字符串/非空 -->
+            <!-- 单图：值存在且为非空字符串 -->
             <div v-if="t.default === 'image' && scope.row[t.name] && String(scope.row[t.name]).trim() !== ''">
               <el-image
                 style="width: 80px; height: 80px"
@@ -66,18 +66,19 @@
                 :hide-on-error="true"
               />
             </div>
-            <!-- 多图：值存在且为数组且长度大于0 -->
-            <div v-else-if="t.default === 'images' && Array.isArray(scope.row[t.name]) && scope.row[t.name].length > 0">
-              <el-image
-                v-for="(url, index) in scope.row[t.name]"
-                :key="index"
-                style="width: 80px; height: 80px; margin-right: 5px;"
-                :src="fileUrl + url"
-                :preview-src-list="scope.row[t.name].map(u => fileUrl + u)"
-                :hide-on-error="true"
-              />
+            <!-- 多图：遍历数组，只显示非空字符串的图片 -->
+            <div v-else-if="t.default === 'images' && Array.isArray(scope.row[t.name])">
+              <template v-for="(url, index) in scope.row[t.name]">
+                <el-image
+                  v-if="url && url.trim() !== ''"
+                  :key="index"
+                  style="width: 80px; height: 80px; margin-right: 5px;"
+                  :src="fileUrl + url"
+                  :preview-src-list="scope.row[t.name].filter(u => u && u.trim() !== '').map(u => fileUrl + u)"
+                  :hide-on-error="true"
+                />
+              </template>
             </div>
-            <!-- 其他情况不渲染任何内容 -->
           </template>
         </el-table-column>
       </template>
