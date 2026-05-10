@@ -39,7 +39,7 @@ export default {
         { text: "粗磨工序", name: "粗磨工序"},
         { text: "晒板工序", name: "晒板工序"},
         { text: "细磨蜡油工序", name: "细磨蜡油工序"},
-        { text: "细磨上油工序", name: "细磨上油工序"},
+        { text: "细磨上漆工序", name: "细磨上漆工序"},
         { text: "总装工序", name: "总装工序"},
       ]
     };

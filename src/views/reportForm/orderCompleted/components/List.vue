@@ -45,6 +45,7 @@ export default {
         { text: "包数", name: "prodQty"},
         { text: "包装箱号", name: "boxNo"},
         { text: "发货日期", name: "sendOutDate"},
+        { text: "发货图片", name: "soPhotoFiles", default: 'images'},
         { text: "发货包数", name: "sendOutPackageQty"},
         { text: "物流单号", name: "expressNo"},
         { text: "总装备注", name: "faNote"},
