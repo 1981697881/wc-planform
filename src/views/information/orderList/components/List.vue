@@ -34,14 +34,30 @@ export default {
       fid: null,
       type: null,
       columns: [
-        { text: '订单日期', name: 'poDate' },
+        /*{ text: '订单日期', name: 'poDate' },*/
+        { text: '销售地', name: 'saleOrgin' },
+        { text: '五金单', name: 'wuJin' },
         { text: '母订单号', name: 'poNo' },
         { text: '子订单号', name: 'subPoNo' },
-        { text: '客户', name: 'custName' },
+        { text: '客户名称', name: 'custName' },
+        { text: '工程地址', name: 'custAddr' },
         { text: '产品名称', name: 'productName' },
+        { text: '产品名称(简略)', name: 'prodShortName' },
         { text: '材质', name: 'productTxture' },
-        { text: '产品数量', name: 'prdQty' },
+        { text: '油漆工艺', name: 'productPaint' },
+        { text: '下单日期', name: 'poDate' },
+        { text: '预计交货日期', name: 'deliveryDate' },
+        { text: '客户要求时间', name: 'custReqDate' },
+        { text: '页数', name: 'pageNo' },
+        { text: '设计员', name: 'designer' },
+        { text: '发货地址', name: 'custAddr' },
+        { text: '发货时间', name: 'sendDate' },
+        { text: '发货单号', name: 'sendNo' },
+        { text: '发货方式', name: 'sendWay' },
         { text: '合同状态', name: 'poStatus' },
+        { text: '备注', name: 'note' },
+       /* { text: '产品数量', name: 'prdQty' },
+        { text: '合同状态', name: 'poStatus' },*/
       ]
     }
   },

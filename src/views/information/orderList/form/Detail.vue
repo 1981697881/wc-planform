@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-form :model="form" :rules="rules" ref="form" :size="'mini'" label-width="100px">
+    <el-form :model="form" :rules="rules" ref="form" :size="'mini'" label-width="110px">
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item :label="'订单日期'" prop="poDate">
@@ -36,6 +36,18 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
+          <el-form-item :label="'销售地'">
+            <el-select style="width: 100%" v-model="form.saleOrgin" placeholder="请选择">
+              <el-option
+                v-for="(item,index) in saleOrginList"
+                :key="index"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
           <el-form-item :label="'客户'" prop="custId">
             <el-select style="width: 100%" filterable
                        remote
@@ -61,6 +73,7 @@
             <el-input v-model="form.productNumber"></el-input>
           </el-form-item>
         </el-col>-->
+
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
@@ -80,30 +93,57 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
+        <el-col :span="16">
+          <el-form-item :label="'产品名称(简略)'">
+            <el-input v-model="form.prodShortName"></el-input>
+          </el-form-item>
+        </el-col>
         <el-col :span="8">
           <el-form-item :label="'预计交货日期'">
             <el-date-picker
-                    v-model="form.deliveryDate"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    style="width: 100%"
-                    placeholder="选择日期">
+              v-model="form.deliveryDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              style="width: 100%"
+              placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
         </el-col>
-          <el-col :span="8">
-            <el-form-item :label="'客户要求日期'">
-              <el-date-picker
-                      v-model="form.custReqDate"
-                      type="date"
-                      value-format="yyyy-MM-dd"
-                      style="width: 100%"
-                      placeholder="选择日期">
-              </el-date-picker>
-            </el-form-item>
-         <!-- <el-form-item :label="'客户'">
-            <el-input v-model="form.custName"></el-input>
-          </el-form-item>-->
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="16">
+          <el-form-item :label="'五金单'">
+            <el-input v-model="form.wuJin"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item :label="'客户要求日期'">
+            <el-date-picker
+              v-model="form.custReqDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              style="width: 100%"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+          <!-- <el-form-item :label="'客户'">
+             <el-input v-model="form.custName"></el-input>
+           </el-form-item>-->
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+
+
+        <el-col :span="8">
+          <el-form-item :label="'发货时间'">
+            <el-date-picker
+              v-model="form.sendDate"
+              type="date"
+              value-format="yyyy-MM-dd"
+              style="width: 100%"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
         </el-col>
        <!-- <el-col :span="12">
           <el-form-item :label="'销售部门'">
@@ -127,8 +167,6 @@
             </el-select>
           </el-form-item>
         </el-col>-->
-      </el-row>
-      <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item :label="'页数'">
             <el-input v-model="form.pageNo"></el-input>
@@ -141,7 +179,7 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="8">
+        <el-col :span="16">
           <el-form-item :label="'发货地址'">
             <el-input v-model="form.custAddr"></el-input>
           </el-form-item>
@@ -151,17 +189,7 @@
             <el-input v-model="form.custTel"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item :label="'发货时间'">
-            <el-date-picker
-                    v-model="form.sendDate"
-                    type="date"
-                    value-format="yyyy-MM-dd"
-                    style="width: 100%"
-                    placeholder="选择日期">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
+
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
@@ -260,6 +288,7 @@ export default {
         prdQty: null,
         productNumber: null,
         productName: null,
+        prodShortName: null,
         productSpec: null,
         /*custName: null,
         deptName: null,*/
@@ -278,6 +307,8 @@ export default {
         poStatus: null,
         note: null,
         sendWay: null,
+        wuJin: null,
+        saleOrgin: null,
         prdOrderEntry: [],
       },
       loading: false,
@@ -295,6 +326,11 @@ export default {
         {label: '产品', value: '产品'},
         {label: '物料', value: '物料'},
         {label: '半成品', value: '半成品'},
+      ],saleOrginList: [
+        {label: '经销商', value: '经销商'},
+        {label: '深圳', value: '深圳'},
+        {label: '工厂', value: '工厂'},
+        {label: '广州', value: '广州'},
       ],
       multipleSelection: [],
       rules: {

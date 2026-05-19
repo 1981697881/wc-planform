@@ -1,7 +1,7 @@
 <template>
   <div>
     <list
-       class="list-main box-shadow"
+      class="list-main box-shadow"
       :columns="columns"
       :loading="loading"
       :list="list"
@@ -9,47 +9,61 @@
       type
       @handle-size="handleSize"
       @handle-current="handleCurrent"
-       @row-click="rowClick"
+      @row-click="rowClick"
     />
 
   </div>
 </template>
 
-<script>
-import { mapGetters } from "vuex";
-import List from "@/components/List";
-import { poReport } from '@/api/reportForm/index'
+<script>import {mapGetters} from 'vuex'
+import List from '@/components/List'
+import {poReport} from '@/api/reportForm/index'
+
 export default {
   components: {
     List
   },
   computed: {
-    ...mapGetters(["node"])
+    ...mapGetters(['node'])
   },
   data() {
     return {
       loading: false,
       list: {},
       columns: [
-        { text: "订单日期", name: "orderDate" },
-        { text: "订单号", name: "poNo" },
-        { text: "子订单号", name: "poSubNo" },
-        { text: "产品编码", name: "itemNumber" },
-        { text: "产品名称", name: "itemName" },
-        { text: "产品规格", name: "itemSpec"},
-        { text: "产品数量", name: "prodQty"},
-        { text: "开工日期", name: "startDate"},
-        { text: "总装日期", name: "assemblyDate"},
-        { text: "总装图片", name: "faPhotoFiles", default: 'images'},
-        { text: "打包日期", name: "packageDate"},
-        { text: "包数", name: "prodQty"},
-        { text: "包装箱号", name: "boxNo"},
-        { text: "发货日期", name: "sendOutDate"},
-        { text: "发货图片", name: "soPhotoFiles", default: 'images'},
-        { text: "发货包数", name: "sendOutPackageQty"},
-        { text: "物流单号", name: "expressNo"},
-        { text: "总装备注", name: "faNote"},
-        { text: "发货备注", name: "sendNote"},
+        {text: '订单日期', name: 'orderDate'},
+        {text: '预计交货日期', name: 'deliveryDate'},
+        {text: '客户要求日期', name: 'custReqDate'},
+        {text: '订单号', name: 'poNo'},
+        {text: '销售地', name: 'saleOrgin'},
+        {text: '五金单', name: 'wuJin'},
+        {text: '子订单号', name: 'poSubNo'},
+        {text: '产品编码', name: 'itemNumber'},
+        {text: '产品名称', name: 'itemName'},
+        {text: '产品名称(简略)', name: 'prodShortName'},
+        {text: '产品规格', name: 'itemSpec'},
+        {text: '产品数量', name: 'prodQty'},
+        {text: '开工日期', name: 'startDate'},
+        {text: '总装日期', name: 'assemblyDate'},
+        {text: '总装图片', name: 'faPhotoFiles', default: 'images'},
+        {text: '打包日期', name: 'packageDate'},
+        {text: '包数', name: 'prodQty'},
+        {text: '包装箱号', name: 'boxNo'},
+        {text: '发货日期', name: 'sendOutDate'},
+        {text: '发货图片', name: 'soPhotoFiles', default: 'images'},
+        {text: '发货包数', name: 'sendOutPackageQty'},
+        {text: '物流单号', name: 'expressNo'},
+        {text: '总装备注', name: 'faNote'},
+        {text: '发货备注', name: 'sendNote'},
+        {text: '页数', name: 'pageNo'},
+        {text: '设计员', name: 'designer'},
+        {text: '发货地址', name: 'custAddr'},
+        {text: '联系电话', name: 'custTel'},
+        {text: '发货时间', name: 'sendDate'},
+        {text: '发货单号', name: 'sendNo'},
+        {text: '发货方式', name: 'sendWay'},
+        {text: '合同状态', name: 'poStatus'},
+        {text: '备注', name: 'note'},
       ]
     };
   },
@@ -68,43 +82,43 @@ export default {
         const list = this.list.records
         const data = this.formatJson(filterVal, list);
         // 这里还是使用export_json_to_excel方法比较好，方便操作数据
-        excel.export_json_to_excel(tHeader,data,'订单完成情况报表')
+        excel.export_json_to_excel(tHeader, data, '订单完成情况报表')
       })
     },
-    formatJson(filter, jsonDate){
+    formatJson(filter, jsonDate) {
       return jsonDate.map(v =>
         filter.map(j => {
           return v[j]
         })
       )
     },
-      //监听每页显示几条
-      handleSize(val) {
-          this.list.size = val
-        this.$emit('uploadList')
-      },
-      //监听当前页
-      handleCurrent(val) {
-          this.list.current = val
-        this.$emit('uploadList')
-      },
-   /* dblclick(obj) {
-      this.$emit('showDialog', obj.row)
-    },*/
+    // 监听每页显示几条
+    handleSize(val) {
+      this.list.size = val
+      this.$emit('uploadList')
+    },
+    // 监听当前页
+    handleCurrent(val) {
+      this.list.current = val
+      this.$emit('uploadList')
+    },
+    /* dblclick(obj) {
+       this.$emit('showDialog', obj.row)
+     },*/
     Delivery(val) {
       delSupplier(val).then(res => {
-        if(res.flag){
-          this.$store.dispatch("list/setClickData", '');
+        if (res.flag) {
+          this.$store.dispatch('list/setClickData', '');
           this.fetchData();
         }
       });
     },
-    //监听单击某一行
+    // 监听单击某一行
     rowClick(obj) {
-      this.$store.dispatch("list/setClickData", obj.row);
+      this.$store.dispatch('list/setClickData', obj.row);
     },
     uploadPr(val) {
-      this.fetchData(val,{
+      this.fetchData(val, {
         pageNum: 1,
         pageSize: this.list.size || 50
       })
@@ -124,7 +138,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.list-main {
-  height: calc(100vh - 250px);
-}
+  .list-main {
+    height: calc(100vh - 250px);
+  }
 </style>
