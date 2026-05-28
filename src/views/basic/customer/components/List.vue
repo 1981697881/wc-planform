@@ -33,7 +33,7 @@ export default {
       columns: [
         { text: '客户代码', name: 'custCode' },
         { text: '客户名称', name: 'custName' },
-        { text: '联系电话', name: 'tel' },
+        /*{ text: '联系电话', name: 'tel' },*/
         { text: '客户地址', name: 'addr' },
       ]
     }

@@ -35,6 +35,8 @@ export default {
         { text: "预计交货期", name: "planDeliveryDate", width: '150px' },
         { text: "订单号", name: "poNo" },
         { text: "子订单号", name: "poSubNo" },
+        { text: "交货日期", name: "orderDate1"},
+        { text: "工地地址", name: "workSiteAddr"},
         { text: "产品编码", name: "itemNumber" },
         { text: "产品名称", name: "itemName" },
         { text: "产品规格", name: "itemSpec"},

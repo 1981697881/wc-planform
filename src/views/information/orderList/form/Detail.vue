@@ -111,9 +111,14 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="16">
+        <el-col :span="8">
           <el-form-item :label="'五金单'">
             <el-input v-model="form.wuJin"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item :label="'交货日期'">
+            <el-input v-model="form.orderDate"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -179,9 +184,14 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="16">
+        <el-col :span="8">
           <el-form-item :label="'发货地址'">
             <el-input v-model="form.custAddr"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item :label="'工地地址'">
+            <el-input v-model="form.workSiteAddr"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -307,8 +317,10 @@ export default {
         poStatus: null,
         note: null,
         sendWay: null,
+        workSiteAddr: null,
         wuJin: null,
         saleOrgin: null,
+        orderDate: null,
         prdOrderEntry: [],
       },
       loading: false,
@@ -347,13 +359,36 @@ export default {
     }
   },
   mounted() {
-    //this.getUsersArray()
-    this.getCustsArray()
     if (this.listInfo) {
-      this.form = this.listInfo
+      this.form = this.listInfo;
     }
+    // 优先确保当前客户回显（先加载选中客户，再加载默认列表）
+    if (this.form.custId) {
+      this.ensureCurrentCustomerInList();
+    }
+    this.getCustsArray(); // 加载默认客户列表（异步，最终会被 ensure... 修正）
   },
   methods: {
+    // 确保当前选中的客户在 custList 中，否则根据 id 查询并添加
+    ensureCurrentCustomerInList() {
+      const custId = this.form.custId;
+      if (!custId) return;
+      const exists = this.custList.some(item => item.id === custId);
+      if (!exists) {
+        this.loading = true;
+        getCustomerByPage({ pageNum: 1, pageSize: 1 }, { id: custId }).then(res => {
+          this.loading = false;
+          if (res.flag && res.data.records && res.data.records.length) {
+            const customer = res.data.records[0];
+            if (!this.custList.some(item => item.id === customer.id)) {
+              this.custList.unshift(customer); // 添加到列表头部保证回显
+            }
+          }
+        }).catch(() => {
+          this.loading = false;
+        });
+      }
+    },
     remoteMethod(query) {
       if (query !== '') {
         this.loading = true;
@@ -409,14 +444,12 @@ export default {
         });
       }
     },
-    getCustsArray(val = {}, data = {
-      pageNum: 1,
-      pageSize: 100
-    }) {
+    getCustsArray(val = {}, data = { pageNum: 1, pageSize: 100 }) {
       getCustomerByPage(data, val).then(res => {
         if (res.flag) {
           this.loading = false;
-          this.custList = res.data.records
+          this.custList = res.data.records || [];
+          this.ensureCurrentCustomerInList(); // ← 关键：合并当前客户
         }
       });
     },

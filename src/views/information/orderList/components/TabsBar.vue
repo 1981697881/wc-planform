@@ -76,7 +76,7 @@
       <el-row :gutter="10">
         <el-col :span="4">
           <el-form-item :label="'销售地'">
-            <el-select style="width: 100%" v-model="saleOrgin" placeholder="请选择">
+            <el-select style="width: 100%" v-model="search.saleOrgin" placeholder="请选择">
               <el-option
                 v-for="(item,index) in saleOrginList"
                 :key="index"
@@ -88,7 +88,7 @@
         </el-col>
         <el-col :span="4">
           <el-form-item :label="'合同状态'">
-            <el-radio-group v-model="poStatus">
+            <el-radio-group v-model="search.poStatus">
               <el-radio label="发齐">发齐</el-radio>
               <el-radio label="未发齐">未发齐</el-radio>
             </el-radio-group>

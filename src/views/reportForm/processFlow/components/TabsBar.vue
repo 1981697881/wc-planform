@@ -7,6 +7,11 @@
             <el-input v-model="search.itemName" placeholder="关键字"/>
           </el-form-item>
         </el-col>
+        <el-col :span="4">
+          <el-form-item :label="'交货日期'">
+            <el-input v-model="search.orderDate1" placeholder="交货日期"/>
+          </el-form-item>
+        </el-col>
         <el-col :span="6" style="display: inline-block">
           <el-form-item :label="'日期'">
             <el-date-picker
@@ -79,6 +84,7 @@
         btnList: [],
         search: {
           itemName: null,
+          orderDate1: null,
         }
       };
     },
@@ -102,6 +108,7 @@
       qFilter() {
         let obj = {}
         this.search.itemName != null && this.search.itemName != '' ? obj.itemName = this.search.itemName : null
+        this.search.orderDate1 != null && this.search.orderDate1 != '' ? obj.orderDate1 = this.search.orderDate1 : null
         this.value != null && this.value != undefined ? obj.endDate = this.value[1] : null
         this.value != null && this.value != undefined ? obj.startDate = this.value[0] : null
         return obj
