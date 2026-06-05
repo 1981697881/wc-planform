@@ -6,6 +6,8 @@ const map = {
   Layout: () => import('@/layout'),
   error: () => import('@/views/404'),
   '/basic': () => import('@/layout'),
+  '/reportBoard': () => import('@/layout'),
+  '/reportForm': () => import('@/layout'),
   'material': () => import('@/views/basic/material'),
   'customer': () => import('@/views/basic/customer'),
   'users': () => import('@/views/system/users'),
@@ -20,6 +22,5 @@ const map = {
 
   'leaderDashboard': () => import('@/views/reportForm/leaderDashboard'),
   'pendingSendOrders': () => import('@/views/reportForm/pendingSendOrders'),
-  'reportBoard': () => import('@/views/reportForm/reportBoard'),
 
 }

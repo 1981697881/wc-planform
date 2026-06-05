@@ -29,7 +29,7 @@ router.beforeEach(async (to, from, next) => {
   if (typeof(hasToken)!='undefined') {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
-      const homePath = getLoginMode() === 'report' ? '/reportBoard' : '/'
+      const homePath = getLoginMode() === 'report' ? '/reportBoardPortal' : '/'
       next({
         path: homePath
       })

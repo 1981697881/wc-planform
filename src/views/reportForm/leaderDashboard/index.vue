@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push('/reportBoard')
+      this.$router.push('/reportBoardPortal')
     },
     handleResize() {
       if (this.chart) {

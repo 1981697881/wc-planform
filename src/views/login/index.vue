@@ -190,7 +190,7 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(res => {
             if (res.flag) {
               setLoginMode(this.loginForm.loginMode)
-              const defaultPath = this.loginForm.loginMode === 'report' ? '/reportBoard' : '/'
+              const defaultPath = this.loginForm.loginMode === 'report' ? '/reportBoardPortal' : '/'
               this.$router.push({ path: this.redirect || defaultPath })
             } else {
               this.$message({ message: res.msg, type: 'error' })
