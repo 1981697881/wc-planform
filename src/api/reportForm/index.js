@@ -69,3 +69,30 @@ export function processSRReport(params, query) {
     data: query
   })
 }
+
+// 报表看板-领导看板（各部门交工序累计数量）
+export function leaderBoardReport(query = {}) {
+  return request({
+    url: '/prodProcess/leaderBoardReport',
+    headers: {
+      'authorization': getToken('wcrx'),
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    data: query
+  })
+}
+
+// 报表看板-收工序后还未交出去的订单
+export function pendingSendReportByPage(params, query) {
+  const url = '/prodProcess/pendingSendReportByPage/' + params.pageNum + '/' + params.pageSize
+  return request({
+    url: url,
+    headers: {
+      'authorization': getToken('wcrx'),
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    data: query
+  })
+}

@@ -53,12 +53,13 @@
                        remote
                        :remote-method="remoteCustMethod"
                        :loading="loading"
-                       v-model="form.custId" placeholder="请选择">
+                       v-model="form.custId"
+                       @change="handleCustomerChange"
+                       placeholder="请选择">
               <el-option
                       v-for="(item,index) in custList"
                       :key="index"
                       :label="item.custName+'-'+item.addr"
-                      @change="handleCustomerChange"
                       :value="item.id">
               </el-option>
             </el-select>
@@ -404,6 +405,13 @@ export default {
         this.getCustsArray({custName: query});
       } else {
         this.custList = [];
+      }
+    },
+    handleCustomerChange(custId) {
+      if (this.form.workSiteAddr) return;
+      const customer = this.custList.find(item => item.id === custId);
+      if (customer && customer.addr) {
+        this.form.workSiteAddr = customer.addr;
       }
     },
     myclass({row, columnIndex}) {

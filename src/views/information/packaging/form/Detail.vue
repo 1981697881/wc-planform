@@ -4,12 +4,12 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item :label="'客户名称'" prop="custName">
-            <el-input v-model="form.custName"></el-input>
+            <el-input v-model="form.custName" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item :label="'订单号码'" prop="orderNo">
-            <el-input v-model="form.orderNo" @blur="queryOrderData(form.orderNo)"></el-input>
+            <el-input v-model="form.orderNo" :disabled="readonly" @blur="queryOrderData(form.orderNo)"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -21,20 +21,21 @@
               type="date"
               value-format="yyyy-MM-dd"
               style="width: 100%"
+              :disabled="readonly"
               placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item :label="'部门'" prop="deptName">
-            <el-input v-model="form.deptName"></el-input>
+            <el-input v-model="form.deptName" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item :label="'工程地址'">
-            <el-input v-model="form.projectAddr"></el-input>
+            <el-input v-model="form.projectAddr" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <!--        <el-col :span="12">-->
@@ -49,7 +50,7 @@
         <!--        </el-col>-->
         <el-col :span="12">
           <el-form-item :label="'活动家具'">
-            <el-checkbox v-model="form.movableSuit" :true-label="1" :false-label="0"></el-checkbox>
+            <el-checkbox v-model="form.movableSuit" :true-label="1" :false-label="0" :disabled="readonly"></el-checkbox>
           </el-form-item>
           <!--<el-form-item :label="'活动家具'">
             <el-input-number :min="0" v-model="form.movableSuit"></el-input-number>
@@ -70,7 +71,7 @@
           <!--            </el-select>-->
           <!--          </el-form-item>-->
           <el-form-item :label="'门类'">
-            <el-checkbox v-model="form.doorType" :true-label="1" :false-label="0"></el-checkbox>
+            <el-checkbox v-model="form.doorType" :true-label="1" :false-label="0" :disabled="readonly"></el-checkbox>
           </el-form-item>
           <!--          <el-form-item :label="'门类'">-->
           <!--            <el-input-number :min="0" v-model="form.doorType"></el-input-number>-->
@@ -88,7 +89,7 @@
                       </el-select>
                     </el-form-item>-->
           <el-form-item :label="'整装家具'">
-            <el-checkbox v-model="form.suit" :true-label="1" :false-label="0"></el-checkbox>
+            <el-checkbox v-model="form.suit" :true-label="1" :false-label="0" :disabled="readonly"></el-checkbox>
           </el-form-item>
           <!--          <el-form-item :label="'整装家具'">
                       <el-input-number :min="0" v-model="form.suit"></el-input-number>
@@ -98,7 +99,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item :label="'墙板'">
-            <el-checkbox v-model="form.wallBoard" :true-label="1" :false-label="0"></el-checkbox>
+            <el-checkbox v-model="form.wallBoard" :true-label="1" :false-label="0" :disabled="readonly"></el-checkbox>
           </el-form-item>
           <!--          <el-form-item :label="'墙板'">
                       <el-input-number :min="0" v-model="form.wallBoard"></el-input-number>
@@ -106,7 +107,7 @@
         </el-col>
         <el-col :span="12">
           <el-form-item :label="'吊顶'">
-            <el-checkbox v-model="form.suspendCeiling" :true-label="1" :false-label="0"></el-checkbox>
+            <el-checkbox v-model="form.suspendCeiling" :true-label="1" :false-label="0" :disabled="readonly"></el-checkbox>
           </el-form-item>
           <!--          <el-form-item :label="'吊顶'">-->
           <!--            <el-input-number :min="0" v-model="form.suspendCeiling"></el-input-number>-->
@@ -139,17 +140,20 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item :label="'明细信息'">
+          <el-form-item :label="'明细信息'" v-if="!readonly">
             <el-button @click="setRow">增加</el-button>
             <el-button @click="delRow">删除</el-button>
+          </el-form-item>
+          <el-form-item :label="'明细信息'" v-else>
+            <span></span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-table class="tableBox" ref="multipleTable" @selection-change="handleSelectionChange" border height="250px"
-                  stripe size="mini" :highlight-current-row="true" :data="form.pblEntry" align="center"
+        <el-table class="tableBox" :class="{ 'table-readonly': readonly }" ref="multipleTable" @selection-change="handleSelectionChange" border height="250px"
+                  stripe size="mini" :highlight-current-row="!readonly" :data="form.pblEntry" align="center"
                   :cell-style="myclass" highlight-current-row>
-          <el-table-column align="center" type="selection"></el-table-column>
+          <el-table-column v-if="!readonly" align="center" type="selection"></el-table-column>
           <el-table-column prop="date" label="序号" type="index" align="center" sortable></el-table-column>
           <el-table-column
             v-for="(t,i) in columns"
@@ -178,6 +182,7 @@
                 </el-button>
                 <!-- 图片上传组件 -->
                 <el-upload
+                  v-if="!readonly"
                   :show-file-list="false"
                   :action="fileUrl"
                   accept="image/jpeg,image/jpg,image/png,image/gif"
@@ -194,7 +199,7 @@
                 </el-upload>
               </div>
               <div v-else>
-                <el-input v-if="!t.sfkgg" v-model="scope.row[t.name]" clearable/>
+                <el-input v-if="!t.sfkgg && !readonly" v-model="scope.row[t.name]" clearable/>
                 <span>{{scope.row[t.name]}}</span>
               </div>
             </template>
@@ -231,6 +236,7 @@
                 </div>
               </el-image>
               <el-button
+                v-if="!readonly"
                 class="delete-img-btn"
                 type="danger"
                 icon="el-icon-delete"
@@ -260,7 +266,8 @@
   </span>
     </el-dialog>
     <div slot="footer" style="text-align:center;">
-      <el-button type="primary" @click="saveData('form')">保存</el-button>
+      <el-button v-if="!readonly" type="primary" @click="saveData('form')">保存</el-button>
+      <el-button v-else @click="$emit('hideDialog', false)">关闭</el-button>
     </div>
   </div>
 </template>
@@ -276,6 +283,10 @@ export default {
     listInfo: {
       type: Object,
       default: null
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -367,6 +378,7 @@ export default {
       pageNum: 1,
       pageSize: 1
     }) {
+      if (this.readonly) return
       console.log(val)
       getProdOrderByPage(data, {poNo: val}).then(res => {
         const data = res.data.records
@@ -738,6 +750,14 @@ export default {
 
   .tableBox .current-row .el-select + span {
     display: none;
+  }
+
+  .table-readonly .el-input {
+    display: none !important;
+  }
+
+  .table-readonly .el-input + span {
+    display: inline !important;
   }
 
   /* 删除按钮样式 */

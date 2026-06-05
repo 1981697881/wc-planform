@@ -18,4 +18,8 @@ const map = {
   'orderCompleted': () => import('@/views/reportForm/orderCompleted'),
   'processAcceptance': () => import('@/views/reportForm/processAcceptance'),
 
+  'leaderDashboard': () => import('@/views/reportForm/leaderDashboard'),
+  'pendingSendOrders': () => import('@/views/reportForm/pendingSendOrders'),
+  'reportBoard': () => import('@/views/reportForm/reportBoard'),
+
 }

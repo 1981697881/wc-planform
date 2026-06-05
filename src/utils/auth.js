@@ -29,3 +29,17 @@ export function setUserName(username){
 export function setPassword(password){
   return Cookies.set('wcpx',password)
 }
+
+const LoginModeKey = 'loginMode'
+
+export function getLoginMode() {
+  return localStorage.getItem(LoginModeKey) || 'manage'
+}
+
+export function setLoginMode(mode) {
+  return localStorage.setItem(LoginModeKey, mode)
+}
+
+export function removeLoginMode() {
+  return localStorage.removeItem(LoginModeKey)
+}

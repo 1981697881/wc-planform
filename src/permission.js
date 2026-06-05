@@ -6,7 +6,8 @@ import {
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css' // progress bar style
 import {
-  getToken
+  getToken,
+  getLoginMode
 } from '@/utils/auth' // get token from cookie
 import getPageTitle from '@/utils/get-page-title'
 import { addRouter } from './utils/addRouter'// 格式化菜单data
@@ -28,8 +29,9 @@ router.beforeEach(async (to, from, next) => {
   if (typeof(hasToken)!='undefined') {
     if (to.path === '/login') {
       // if is logged in, redirect to the home page
+      const homePath = getLoginMode() === 'report' ? '/reportBoard' : '/'
       next({
-        path: '/'
+        path: homePath
       })
       NProgress.done()
     } else {

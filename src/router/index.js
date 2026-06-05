@@ -39,6 +39,21 @@ export const StaticRouterMap = [{
   component: () => import('@/views/404'),
   hidden: true
 }, {
+  path: '/reportBoard',
+  component: () => import('@/views/reportForm/reportBoard/index'),
+  hidden: true,
+  meta: { title: '报表看板' }
+}, {
+  path: '/reportBoard/leaderDashboard',
+  component: () => import('@/views/reportForm/leaderDashboard/index'),
+  hidden: true,
+  meta: { title: '领导看板' }
+}, {
+  path: '/reportBoard/pendingSendOrders',
+  component: () => import('@/views/reportForm/pendingSendOrders/index'),
+  hidden: true,
+  meta: { title: '收工序后还未交出去的订单' }
+}, {
   path: '/',
   component: Layout,
   redirect: '/dashboard',

@@ -2,19 +2,19 @@
   <div class="app-list">
     <div class="list-containerOther">
       <div>
-        <tabs-bar ref="tabs" @showDialog="handlerDialog" @showInventory="handlerInventory" @exportData="exportData" @printOrderTable="printOrderTable" @printLabel="printLabel" @del="delivery" @queryBtn="query" @uploadList="upload"/>
+        <tabs-bar ref="tabs" @showDialog="handlerDialog" @showViewDialog="handlerViewDialog" @showInventory="handlerInventory" @exportData="exportData" @printOrderTable="printOrderTable" @printLabel="printLabel" @del="delivery" @queryBtn="query" @uploadList="upload"/>
       </div>
       <list ref="list" @uploadList="uploadPage" @showDialog="handlerDialog"/>
     </div>
     <el-dialog
       :visible.sync="visible"
-      title="基本信息"
+      :title="dialogTitle"
       v-if="visible"
       v-dialogDrag
       :width="'60%'"
       destroy-on-close
     >
-      <info @hideDialog="hideWindow" @uploadList="upload" :listInfo="listInfo"></info>
+      <info @hideDialog="hideWindow" @uploadList="upload" :listInfo="listInfo" :readonly="readonly"></info>
     </el-dialog>
     <el-dialog
       :visible.sync="visible2"
@@ -65,6 +65,8 @@ export default {
       },
       visible: null,
       visible2: null,
+      readonly: false,
+      dialogTitle: '基本信息',
       rid: null,
       listInfo: null,
       floorId: null
@@ -99,6 +101,18 @@ export default {
       this.visible2 = val
     },
     handlerDialog(obj) {
+      this.readonly = false
+      this.dialogTitle = '基本信息'
+      this.listInfo = null
+      if (obj) {
+        const info = JSON.parse(JSON.stringify(obj))
+        this.listInfo = info
+      }
+      this.visible = true
+    },
+    handlerViewDialog(obj) {
+      this.readonly = true
+      this.dialogTitle = '查看'
       this.listInfo = null
       if (obj) {
         const info = JSON.parse(JSON.stringify(obj))
