@@ -58,6 +58,7 @@
                       v-for="(item,index) in custList"
                       :key="index"
                       :label="item.custName+'-'+item.addr"
+                      @change="handleCustomerChange"
                       :value="item.id">
               </el-option>
             </el-select>
