@@ -1,4 +1,5 @@
 import { getRouter } from '@/api/menu'
+import { getMenuType } from '@/utils/auth'
 import { StaticRouterMap } from '@/router'
 
 const state = {
@@ -16,9 +17,9 @@ const actions = {
     // 进行路由拼接并存储
     commit('SET_ROUTER', StaticRouterMap.concat(routerList))
   },
-  fetchMenuWY({ commit }, userId) {
+  fetchMenuWY({ commit }) {
     return new Promise((resolve, reject) => {
-      getRouter(userId).then(res => {
+      getRouter(getMenuType()).then(res => {
         let routes = res.data
         resolve(routes)
       }).catch(error => {

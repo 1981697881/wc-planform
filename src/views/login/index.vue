@@ -124,6 +124,7 @@
 <script>
 import { validUsername } from '@/utils/validate'
 import { getLoginMode, setLoginMode } from '@/utils/auth'
+import { resetDynamicMenu } from '@/utils/dynamicMenu'
 
 export default {
   name: 'Login',
@@ -190,8 +191,8 @@ export default {
           this.$store.dispatch('user/login', this.loginForm).then(res => {
             if (res.flag) {
               setLoginMode(this.loginForm.loginMode)
-              const defaultPath = this.loginForm.loginMode === 'report' ? '/reportBoardPortal' : '/'
-              this.$router.push({ path: this.redirect || defaultPath })
+              resetDynamicMenu()
+              this.$router.push({ path: this.redirect || '/' })
             } else {
               this.$message({ message: res.msg, type: 'error' })
             }

@@ -43,3 +43,8 @@ export function setLoginMode(mode) {
 export function removeLoginMode() {
   return localStorage.removeItem(LoginModeKey)
 }
+
+/** 1-后台菜单  4-看板菜单 */
+export function getMenuType() {
+  return getLoginMode() === 'report' ? '4' : '1'
+}

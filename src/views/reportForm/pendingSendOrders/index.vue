@@ -79,7 +79,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push('/reportBoardPortal')
+      this.$router.push('/')
     },
     headerStyle() {
       return {

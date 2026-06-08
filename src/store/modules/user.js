@@ -1,6 +1,7 @@
 import { login, getInfo,changePassword, getPermissions} from '@/api/user'
 import { getToken, setToken, removeToken, setUserName, setPassword, setPer} from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { resetDynamicMenu } from '@/utils/dynamicMenu'
 
 const state = {
   token: getToken('wcrx'),
@@ -121,13 +122,12 @@ const actions = {
   // user logout
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
-      //logout({ fid: state.token }).then(() => {
       commit('SET_TOKEN', '')
       commit('SET_PER', '')
-      //removeToken('wcper')
       removeToken('wcrx')
       removeToken('wcps')
       removeToken('wcun')
+      resetDynamicMenu()
       resetRouter()
       resolve()
       /*}).catch(error => {
@@ -147,9 +147,7 @@ const actions = {
     return new Promise(resolve => {
       commit('SET_TOKEN', '')
       removeToken('wcrx')
-      /*  removeToken('wcps')
-        removeToken('wcun')*/
-      removeToken()
+      resetDynamicMenu()
       resolve()
     })
   },
