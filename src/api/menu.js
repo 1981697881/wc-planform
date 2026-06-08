@@ -7,7 +7,10 @@ export function getRouter(menuType) {
     headers: {
       'authorization': getToken('wcrx'),
     },
-    url: '/sysMenu/getByUser/' + menuType,
+    url: '/sysMenu/getByUserByType',
+    params: {
+      type: menuType
+    },
     method: 'get',
   })
 }

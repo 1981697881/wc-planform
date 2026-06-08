@@ -73,7 +73,7 @@ export default {
     },
     async logout() {
       await this.$store.dispatch('user/logout')
-      location.reload()
+      this.$router.replace('/login')
     }
   }
 }

@@ -99,7 +99,7 @@
                 >
                   <i class="el-icon-data-board"></i>
                   <span class="mode-name">报表看板</span>
-                  <span class="mode-desc">大屏数据展示</span>
+                  <span class="mode-desc">数据展示</span>
                 </div>
               </div>
             </div>
@@ -192,7 +192,8 @@ export default {
             if (res.flag) {
               setLoginMode(this.loginForm.loginMode)
               resetDynamicMenu()
-              this.$router.push({ path: this.redirect || '/' })
+              // 始终从首页进入，由 permission 按当前登录模式解析目标路由
+              this.$router.push({ path: '/' })
             } else {
               this.$message({ message: res.msg, type: 'error' })
             }

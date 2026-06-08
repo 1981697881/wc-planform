@@ -37,3 +37,28 @@ export function findFirstMenuPath(routes, parentPath = '') {
   }
   return null
 }
+
+export function isPathInRoutes(path, routes, parentPath = '') {
+  for (const route of routes) {
+    if (route.path === '*') continue
+    const fullPath = route.path.startsWith('/')
+      ? route.path
+      : `${parentPath}/${route.path}`.replace(/\/+/g, '/')
+    if (fullPath === path) return true
+    if (route.children && route.children.length && isPathInRoutes(path, route.children, fullPath)) {
+      return true
+    }
+  }
+  return false
+}
+
+export function resolveTargetPath(toPath, asyncRouter, staticRoutes, loginMode) {
+  const allRoutes = (staticRoutes || []).concat(asyncRouter || [])
+  if (toPath && toPath !== '/' && isPathInRoutes(toPath, allRoutes)) {
+    return toPath
+  }
+  if (loginMode === 'report') {
+    return findFirstMenuPath(asyncRouter) || '/'
+  }
+  return '/dashboard'
+}

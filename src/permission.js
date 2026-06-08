@@ -19,7 +19,7 @@ import {
   getLoadedMenuType,
   setLoadedMenuType,
   resetDynamicMenu,
-  findFirstMenuPath
+  resolveTargetPath
 } from '@/utils/dynamicMenu'
 
 NProgress.configure({
@@ -103,13 +103,12 @@ function gotoRouter(to, next) {
       setLoadedMenuType(menuType)
       store.dispatch('menu/setRouterList', asyncRouter)
 
-      let targetPath = to.path
-      if (getLoginMode() === 'report' && (to.path === '/' || to.path === '/dashboard')) {
-        const firstPath = findFirstMenuPath(asyncRouter)
-        if (firstPath) {
-          targetPath = firstPath
-        }
-      }
+      const targetPath = resolveTargetPath(
+        to.path,
+        asyncRouter,
+        router.options.routes,
+        getLoginMode()
+      )
 
       store.dispatch('permission/generateRoutes', router.options.routes)
       next({ path: targetPath, query: to.query, hash: to.hash, replace: true })
