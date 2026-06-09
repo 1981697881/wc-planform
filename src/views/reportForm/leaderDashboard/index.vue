@@ -1,55 +1,59 @@
 <template>
-  <div class="dashboard-page" v-loading="loading">
-    <div class="dashboard-header">
-      <div class="header-left">
-        <el-button type="text" icon="el-icon-arrow-left" class="back-btn" @click="goBack">返回</el-button>
-        <h1>领导看板</h1>
-      </div>
-      <div class="header-right">
-        <span class="refresh-tip">{{ refreshCountdown }} 秒后自动刷新</span>
-        <span class="update-time" v-if="updateTime">更新时间：{{ updateTime }}</span>
+  <div class="leader-board" v-loading="loading">
+    <div class="board-bg"></div>
+
+    <div class="board-header">
+      <el-button type="text" icon="el-icon-arrow-left" class="back-btn" @click="goBack">返回</el-button>
+      <div class="header-meta">
+        <span class="refresh-tip">{{ refreshCountdown }}s 刷新</span>
+        <span v-if="updateTime" class="update-time">{{ updateTime }}</span>
       </div>
     </div>
 
-    <div class="chart-container" ref="chartRef"></div>
+    <div class="board-title">领导看板</div>
 
-    <div class="table-section">
-      <table class="board-table">
-        <thead>
-          <tr>
-            <th class="dept-col">部门</th>
-            <th>本周各部门交出去的累计订单数<br><span class="sub">（部门交工序的数量）</span></th>
-            <th>本月各部门交出去的累计订单数<br><span class="sub">（部门交工序的数量）</span></th>
-            <th>今年各部门交出去的累计订单数<br><span class="sub">（部门交工序的数量）</span></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, index) in tableData" :key="index">
-            <td class="dept-col">{{ row.deptName }}</td>
-            <td>{{ row.weekCount }}</td>
-            <td>{{ row.monthCount }}</td>
-            <td>{{ row.yearCount }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="card-list">
+      <div
+        v-for="(item, index) in list"
+        :key="item.processNumber || index"
+        class="process-card"
+      >
+        <div class="card-left">
+          <div class="process-name">{{ item.processName || '—' }}</div>
+          <div class="process-main">
+            <span class="main-label">周数量</span>
+            <span class="main-value">{{ item.weekSendQty != null ? item.weekSendQty : '0' }}</span>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="avatar-icon">
+            <i class="el-icon-user-solid"></i>
+          </div>
+          <div class="qty-list">
+            <div class="qty-row">
+              <span class="qty-label">周数量：</span>
+              <span class="qty-value">{{ item.weekSendQty != null ? item.weekSendQty : '0' }}</span>
+            </div>
+            <div class="qty-row">
+              <span class="qty-label">月数量：</span>
+              <span class="qty-value">{{ item.monthSendQty != null ? item.monthSendQty : '0' }}</span>
+            </div>
+            <div class="qty-row">
+              <span class="qty-label">年数量：</span>
+              <span class="qty-value">{{ item.yearSendQty != null ? item.yearSendQty : '0' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-if="!loading && list.length === 0" class="empty-tip">暂无数据</div>
     </div>
   </div>
 </template>
 
 <script>
-import echarts from 'echarts'
 import autoRefresh from '@/mixins/autoRefresh'
-import { leaderBoardReport } from '@/api/reportForm/index'
-
-const DEFAULT_DEPTS = [
-  { deptName: '备料车间', shortName: '备料', weekCount: 0, monthCount: 0, yearCount: 0 },
-  { deptName: '木工车间', shortName: '木工', weekCount: 0, monthCount: 0, yearCount: 0 },
-  { deptName: '粗磨车间', shortName: '粗磨', weekCount: 0, monthCount: 0, yearCount: 0 },
-  { deptName: '晒板车间', shortName: '晒板', weekCount: 0, monthCount: 0, yearCount: 0 },
-  { deptName: '细磨、蜡油车间', shortName: '细磨、蜡油', weekCount: 0, monthCount: 0, yearCount: 0 },
-  { deptName: '细磨、上漆车间', shortName: '细磨、上漆', weekCount: 0, monthCount: 0, yearCount: 0 },
-  { deptName: '总装车间（收工序数量）', shortName: '总装', weekCount: 0, monthCount: 0, yearCount: 0 }
-]
+import { processLeadBoardReportByPage } from '@/api/reportForm/index'
 
 export default {
   name: 'LeaderDashboard',
@@ -57,228 +61,248 @@ export default {
   data() {
     return {
       loading: false,
-      chart: null,
-      tableData: DEFAULT_DEPTS.map(item => ({ ...item })),
+      list: [],
       updateTime: ''
     }
   },
   mounted() {
     this.fetchData()
-    window.addEventListener('resize', this.handleResize)
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.handleResize)
-    if (this.chart) {
-      this.chart.dispose()
-      this.chart = null
-    }
   },
   methods: {
     goBack() {
       this.$router.push('/')
-    },
-    handleResize() {
-      if (this.chart) {
-        this.chart.resize()
-      }
-    },
-    normalizeData(list) {
-      if (!Array.isArray(list) || list.length === 0) {
-        return DEFAULT_DEPTS.map(item => ({ ...item }))
-      }
-      return DEFAULT_DEPTS.map(defaultDept => {
-        const matched = list.find(item => {
-          const name = item.deptName || item.shortName || ''
-          return name.includes(defaultDept.shortName) || defaultDept.deptName.includes(name)
-        })
-        if (!matched) {
-          return { ...defaultDept }
-        }
-        return {
-          deptName: matched.deptName || defaultDept.deptName,
-          shortName: matched.shortName || defaultDept.shortName,
-          weekCount: matched.weekCount != null ? matched.weekCount : (matched.weekQty || 0),
-          monthCount: matched.monthCount != null ? matched.monthCount : (matched.monthQty || 0),
-          yearCount: matched.yearCount != null ? matched.yearCount : (matched.yearQty || 0)
-        }
-      })
-    },
-    fetchData() {
-      this.loading = true
-      leaderBoardReport().then(res => {
-        this.loading = false
-        if (res.flag) {
-          this.tableData = this.normalizeData(res.data)
-        }
-        this.updateTime = this.formatNow()
-        this.renderChart()
-      }).catch(() => {
-        this.loading = false
-        this.updateTime = this.formatNow()
-        this.renderChart()
-      })
     },
     formatNow() {
       const now = new Date()
       const pad = n => String(n).padStart(2, '0')
       return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`
     },
-    renderChart() {
-      if (!this.$refs.chartRef) return
-      if (!this.chart) {
-        this.chart = echarts.init(this.$refs.chartRef)
-      }
-      const categories = this.tableData.map(item => item.shortName)
-      const weekData = this.tableData.map(item => item.weekCount)
-      const monthData = this.tableData.map(item => item.monthCount)
-      const yearData = this.tableData.map(item => item.yearCount)
-
-      this.chart.setOption({
-        tooltip: {
-          trigger: 'axis',
-          axisPointer: { type: 'shadow' }
-        },
-        legend: {
-          data: ['本周', '本月', '今年'],
-          top: 10
-        },
-        grid: {
-          left: '3%',
-          right: '4%',
-          bottom: '3%',
-          top: 60,
-          containLabel: true
-        },
-        xAxis: {
-          type: 'category',
-          data: categories,
-          axisLabel: {
-            interval: 0,
-            rotate: categories.length > 5 ? 20 : 0
-          }
-        },
-        yAxis: {
-          type: 'value',
-          name: '数量',
-          minInterval: 1
-        },
-        series: [
-          {
-            name: '本周',
-            type: 'bar',
-            data: weekData,
-            itemStyle: { color: '#5470c6' },
-            barMaxWidth: 40
-          },
-          {
-            name: '本月',
-            type: 'bar',
-            data: monthData,
-            itemStyle: { color: '#91cc75' },
-            barMaxWidth: 40
-          },
-          {
-            name: '今年',
-            type: 'bar',
-            data: yearData,
-            itemStyle: { color: '#fac858' },
-            barMaxWidth: 40
-          }
-        ]
-      }, true)
+    fetchData() {
+      this.loading = true
+      processLeadBoardReportByPage(
+        { pageNum: 1, pageSize: 100 },
+        {}
+      ).then(res => {
+        this.loading = false
+        if (res.flag && res.data) {
+          this.list = res.data.records || []
+        }
+        this.updateTime = this.formatNow()
+      }).catch(() => {
+        this.loading = false
+        this.updateTime = this.formatNow()
+      })
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.dashboard-page {
+.leader-board {
+  position: relative;
   min-height: 100vh;
-  background: #f0f2f5;
-  padding: 16px 24px 24px;
+  padding: 12px 16px 24px;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.dashboard-header {
+.board-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(160deg, #0a2463 0%, #1e3a8a 45%, #0f172a 100%);
+
+  &::after {
+    content: '';
+    position: absolute;
+    right: -10%;
+    bottom: -15%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.06) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+}
+
+.board-header {
+  position: relative;
+  z-index: 1;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-
-  .header-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: 24px;
-    color: #303133;
-  }
+  margin-bottom: 8px;
 
   .back-btn {
-    font-size: 14px;
-    color: #606266;
+    color: rgba(255, 255, 255, 0.85);
+    padding-left: 0;
   }
 
-  .header-right {
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+.board-title {
+  position: relative;
+  z-index: 1;
+  text-align: right;
+  font-size: clamp(28px, 6vw, 42px);
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card-list {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 14px;
+}
+
+.process-card {
+  display: flex;
+  align-items: stretch;
+  min-height: 120px;
+  padding: 16px 18px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, rgba(30, 64, 120, 0.92) 0%, rgba(15, 40, 90, 0.88) 100%);
+  border: 1px solid rgba(100, 160, 255, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.card-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-right: 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+
+  .process-name {
+    font-size: clamp(18px, 4vw, 24px);
+    font-weight: 600;
+    color: #f4a261;
+    margin-bottom: 8px;
+    line-height: 1.3;
+  }
+
+  .process-main {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+
+    .main-label {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .main-value {
+      font-size: clamp(36px, 8vw, 52px);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1;
+    }
+  }
+}
+
+.card-right {
+  flex: 1.2;
+  display: flex;
+  align-items: center;
+  padding-left: 14px;
+  gap: 12px;
+
+  .avatar-icon {
+    flex-shrink: 0;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
     display: flex;
     align-items: center;
-    gap: 20px;
-    font-size: 13px;
-    color: #909399;
-  }
-}
+    justify-content: center;
 
-.chart-container {
-  height: 420px;
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 16px;
-}
-
-.table-section {
-  background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  overflow: auto;
-}
-
-.board-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-
-  th, td {
-    border: 1px solid #dcdfe6;
-    padding: 12px 16px;
-    text-align: center;
-    vertical-align: middle;
-  }
-
-  thead th {
-    background: #e2efda;
-    color: #303133;
-    font-weight: bold;
-    line-height: 1.5;
-
-    .sub {
-      font-weight: normal;
-      font-size: 12px;
-      color: #606266;
+    i {
+      font-size: 28px;
+      color: rgba(255, 255, 255, 0.85);
     }
   }
 
-  tbody td {
-    background: #f5faf2;
+  .qty-list {
+    flex: 1;
+    min-width: 0;
   }
 
-  .dept-col {
-    min-width: 160px;
-    font-weight: 500;
-    text-align: left;
-    background: #e2efda !important;
+  .qty-row {
+    display: flex;
+    align-items: center;
+    line-height: 1.8;
+    font-size: clamp(13px, 3.2vw, 15px);
+  }
+
+  .qty-label {
+    color: #f4a261;
+    white-space: nowrap;
+  }
+
+  .qty-value {
+    color: #fff;
+    font-weight: 600;
+  }
+}
+
+.empty-tip {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .leader-board {
+    padding: 10px 12px 20px;
+  }
+
+  .card-list {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .process-card {
+    min-height: 110px;
+    padding: 14px;
+  }
+
+  .card-left {
+    .process-main .main-value {
+      font-size: 40px;
+    }
+  }
+
+  .card-right {
+    .avatar-icon {
+      width: 40px;
+      height: 40px;
+
+      i {
+        font-size: 22px;
+      }
+    }
+  }
+
+  .board-title {
+    font-size: 26px;
+    margin-bottom: 12px;
   }
 }
 </style>

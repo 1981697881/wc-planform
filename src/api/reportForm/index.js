@@ -70,10 +70,11 @@ export function processSRReport(params, query) {
   })
 }
 
-// 报表看板-领导看板（各部门交工序累计数量）
-export function leaderBoardReport(query = {}) {
+// 报表看板-领导工序看板报表（分页）
+export function processLeadBoardReportByPage(params, query = {}) {
+  const url = '/prodProcess/processLeadBoardReportByPage/' + params.pageNum + '/' + params.pageSize
   return request({
-    url: '/prodProcess/leaderBoardReport',
+    url: url,
     headers: {
       'authorization': getToken('wcrx'),
       'Content-Type': 'application/json'
@@ -83,9 +84,9 @@ export function leaderBoardReport(query = {}) {
   })
 }
 
-// 报表看板-收工序后还未交出去的订单
-export function pendingSendReportByPage(params, query) {
-  const url = '/prodProcess/pendingSendReportByPage/' + params.pageNum + '/' + params.pageSize
+// 报表看板-收工序后还未交出去的订单看板报表（分页）
+export function processNotSendBoardReportByPage(params, query = {}) {
+  const url = '/prodProcess/processNotSendBoardReportByPage/' + params.pageNum + '/' + params.pageSize
   return request({
     url: url,
     headers: {

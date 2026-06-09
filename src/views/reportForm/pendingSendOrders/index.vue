@@ -17,35 +17,35 @@
         border
         stripe
         size="medium"
-        height="calc(100vh - 120px)"
+        :height="tableHeight"
         :header-cell-style="headerStyle"
         :cell-style="cellStyle"
+        :row-class-name="rowClassName"
       >
-        <el-table-column type="index" label="序号" width="70" align="center"></el-table-column>
-        <el-table-column prop="subPoNo" label="子订单号" min-width="140" align="center" show-overflow-tooltip>
+        <el-table-column type="index" label="序号" width="60" align="center" fixed></el-table-column>
+        <el-table-column prop="poNo" label="订单号" min-width="120" align="center" show-overflow-tooltip fixed></el-table-column>
+        <el-table-column prop="poSubNo" label="子订单号" min-width="120" align="center" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="itemNumber" label="产品编码" min-width="110" align="center" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="itemName" label="产品名称" min-width="120" align="center" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="departName" label="部件名称" min-width="120" align="center" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="deptQty" label="产品部件数量" width="110" align="center"></el-table-column>
+        <el-table-column prop="receiveDate" label="接收时间" width="110" align="center"></el-table-column>
+        <el-table-column prop="startDate" label="开工日期" width="110" align="center"></el-table-column>
+        <el-table-column prop="warnningDays" label="预警天数" width="90" align="center"></el-table-column>
+        <el-table-column prop="warnningRemainDays" label="预警剩余天数" width="110" align="center">
           <template slot-scope="scope">
-            {{ scope.row.subPoNo || scope.row.poSubNo || '' }}
+            <span :class="{ 'warn-text': isWarn(scope.row) }">
+              {{ scope.row.warnningRemainDays != null ? scope.row.warnningRemainDays : '—' }}
+            </span>
           </template>
         </el-table-column>
-        <el-table-column prop="itemName" label="产品部件" min-width="160" align="center" show-overflow-tooltip>
-          <template slot-scope="scope">
-            {{ scope.row.itemName || scope.row.departName || '' }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="itemQty" label="产品部件数量" width="130" align="center">
-          <template slot-scope="scope">
-            {{ scope.row.itemQty != null ? scope.row.itemQty : (scope.row.receiveQty || scope.row.prodQty || '') }}
-          </template>
-        </el-table-column>
-        <el-table-column prop="receiveDate" label="接收时间（即收工序时间）" width="180" align="center"></el-table-column>
-        <el-table-column prop="startDate" label="开工时间" width="160" align="center"></el-table-column>
-        <el-table-column label="收工序图片" width="120" align="center">
+        <el-table-column label="收工序图片" width="100" align="center">
           <template slot-scope="scope">
             <template v-if="getPhotoList(scope.row).length">
               <el-image
                 v-for="(url, index) in getPhotoList(scope.row)"
                 :key="index"
-                style="width: 60px; height: 60px; margin: 2px;"
+                class="photo-thumb"
                 :src="fileUrl + url"
                 :preview-src-list="getPhotoList(scope.row).map(u => fileUrl + u)"
                 fit="cover"
@@ -61,7 +61,7 @@
 
 <script>
 import autoRefresh from '@/mixins/autoRefresh'
-import { pendingSendReportByPage } from '@/api/reportForm/index'
+import { processNotSendBoardReportByPage } from '@/api/reportForm/index'
 
 export default {
   name: 'PendingSendOrders',
@@ -71,15 +71,24 @@ export default {
       loading: false,
       list: [],
       updateTime: '',
+      tableHeight: 500,
       fileUrl: this.$store.state.user.url + '/images/'
     }
   },
   mounted() {
+    this.calcTableHeight()
+    window.addEventListener('resize', this.calcTableHeight)
     this.fetchData()
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.calcTableHeight)
   },
   methods: {
     goBack() {
       this.$router.push('/')
+    },
+    calcTableHeight() {
+      this.tableHeight = window.innerHeight - 100
     },
     headerStyle() {
       return {
@@ -95,13 +104,20 @@ export default {
         textAlign: 'center'
       }
     },
+    rowClassName({ row }) {
+      return this.isWarn(row) ? 'warn-row' : ''
+    },
+    isWarn(row) {
+      return row.warnningRemainDays != null && row.warnningRemainDays <= 0
+    },
     getPhotoList(row) {
-      const photos = row.recPhotoFiles || row.photoFiles
-      if (!photos) return []
-      if (Array.isArray(photos)) {
-        return photos.filter(u => u && String(u).trim())
+      if (row.recPhotoFiles && row.recPhotoFiles.length) {
+        return row.recPhotoFiles.filter(u => u && String(u).trim())
       }
-      return String(photos).trim() ? [photos] : []
+      if (row.recPhoto && String(row.recPhoto).trim()) {
+        return [row.recPhoto]
+      }
+      return []
     },
     formatNow() {
       const now = new Date()
@@ -110,7 +126,10 @@ export default {
     },
     fetchData() {
       this.loading = true
-      pendingSendReportByPage({ pageNum: 1, pageSize: 500 }, {}).then(res => {
+      processNotSendBoardReportByPage(
+        { pageNum: 1, pageSize: 500 },
+        {}
+      ).then(res => {
         this.loading = false
         if (res.flag && res.data) {
           this.list = res.data.records || []
@@ -129,38 +148,47 @@ export default {
 .dashboard-page {
   min-height: 100vh;
   background: #f0f2f5;
-  padding: 16px 24px 24px;
+  padding: 12px 16px 16px;
+  box-sizing: border-box;
 }
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 16px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
 
   .header-left {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
+    min-width: 0;
   }
 
   h1 {
     margin: 0;
-    font-size: 22px;
+    font-size: clamp(16px, 4vw, 22px);
     color: #303133;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .back-btn {
     font-size: 14px;
     color: #606266;
+    flex-shrink: 0;
   }
 
   .header-right {
     display: flex;
-    align-items: center;
-    gap: 20px;
-    font-size: 13px;
+    flex-direction: column;
+    align-items: flex-end;
+    font-size: 12px;
     color: #909399;
+    flex-shrink: 0;
   }
 }
 
@@ -168,10 +196,36 @@ export default {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  padding: 8px;
+  padding: 4px;
+  overflow: auto;
+}
+
+.photo-thumb {
+  width: 50px;
+  height: 50px;
+  margin: 2px;
 }
 
 .no-image {
   color: #c0c4cc;
+}
+
+.warn-text {
+  color: #f56c6c;
+  font-weight: 600;
+}
+
+::v-deep .warn-row td {
+  background: #fef0f0 !important;
+}
+
+@media (max-width: 768px) {
+  .dashboard-page {
+    padding: 8px 8px 12px;
+  }
+
+  .dashboard-header h1 {
+    max-width: 200px;
+  }
 }
 </style>
