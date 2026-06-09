@@ -2,7 +2,6 @@
   <div class="dashboard-page" v-loading="loading">
     <div class="dashboard-header">
       <div class="header-left">
-        <el-button type="text" icon="el-icon-arrow-left" class="back-btn" @click="goBack">返回</el-button>
         <h1>收工序后还未交出去的订单</h1>
       </div>
       <div class="header-right">
@@ -59,9 +58,6 @@ export default {
     this.fetchData()
   },
   methods: {
-    goBack() {
-      this.$router.push('/')
-    },
     handleSize(val) {
       this.list.size = val
       this.fetchData()
@@ -140,12 +136,6 @@ export default {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-  }
-
-  .back-btn {
-    font-size: 14px;
-    color: #606266;
-    flex-shrink: 0;
   }
 
   .header-right {

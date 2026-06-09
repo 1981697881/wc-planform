@@ -16,6 +16,7 @@
 import { Navbar, Sidebar, AppMain , TagsView} from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
+import { getLoginMode } from '@/utils/auth'
 
 export default {
   name: 'Layout',
@@ -44,7 +45,8 @@ export default {
         hideSidebar: !this.sidebar.opened,
         openSidebar: this.sidebar.opened,
         withoutAnimation: this.sidebar.withoutAnimation,
-        mobile: this.device === 'mobile'
+        mobile: this.device === 'mobile',
+        reportMode: getLoginMode() === 'report'
       }
     }
   },
@@ -98,5 +100,9 @@ export default {
 
   .mobile .fixed-header {
     width: 100%;
+  }
+
+  .mobile.reportMode.hideSidebar .fixed-header {
+    width: calc(100% - 54px);
   }
 </style>

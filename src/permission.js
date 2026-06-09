@@ -122,6 +122,11 @@ function gotoRouter(to, next) {
       )
 
       store.dispatch('permission/generateRoutes', router.options.routes)
+
+      if (getLoginMode() === 'report') {
+        store.dispatch('app/closeSideBar', { withoutAnimation: true })
+      }
+
       next({ path: targetPath, query: to.query, hash: to.hash, replace: true })
     })
     .catch(e => {

@@ -192,6 +192,9 @@ export default {
             if (res.flag) {
               setLoginMode(this.loginForm.loginMode)
               resetDynamicMenu()
+              if (this.loginForm.loginMode === 'report') {
+                this.$store.dispatch('app/closeSideBar', { withoutAnimation: true })
+              }
               // 始终从首页进入，由 permission 按当前登录模式解析目标路由
               this.$router.push({ path: '/' })
             } else {

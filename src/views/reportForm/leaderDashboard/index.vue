@@ -3,7 +3,6 @@
     <div class="board-bg"></div>
 
     <div class="board-header">
-      <el-button type="text" icon="el-icon-arrow-left" class="back-btn" @click="goBack">返回</el-button>
       <div class="header-meta">
         <span class="refresh-tip">{{ refreshCountdown }}s 刷新</span>
         <span v-if="updateTime" class="update-time">{{ updateTime }}</span>
@@ -69,9 +68,6 @@ export default {
     this.fetchData()
   },
   methods: {
-    goBack() {
-      this.$router.push('/')
-    },
     formatNow() {
       const now = new Date()
       const pad = n => String(n).padStart(2, '0')
@@ -129,14 +125,9 @@ export default {
   position: relative;
   z-index: 1;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 8px;
-
-  .back-btn {
-    color: rgba(255, 255, 255, 0.85);
-    padding-left: 0;
-  }
 
   .header-meta {
     display: flex;

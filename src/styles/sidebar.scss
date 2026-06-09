@@ -161,6 +161,25 @@
         transform: translate3d(-$sideBarWidth, 0, 0);
       }
     }
+
+    // 看板模式：折叠时保留 54px 图标栏，便于 H5 切换菜单
+    &.reportMode.hideSidebar {
+      .sidebar-container {
+        pointer-events: auto;
+        transform: translate3d(0, 0, 0);
+        width: 54px !important;
+      }
+
+      .main-container {
+        margin-left: 54px;
+      }
+    }
+
+    &.reportMode.openSidebar {
+      .main-container {
+        margin-left: 0;
+      }
+    }
   }
 
   .withoutAnimation {
