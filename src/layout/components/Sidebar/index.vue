@@ -20,6 +20,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { getLoginMode } from '@/utils/auth'
+import { filterSidebarRoutes } from '@/utils/dynamicMenu'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
@@ -31,8 +33,7 @@ export default {
       'sidebar'
     ]),
     routes() {
-      return this.$router.options.routes
-      // return global.antRouter // 这里应该最好使用vuex的全局变量
+      return filterSidebarRoutes(this.$router.options.routes, getLoginMode())
     },
     activeMenu() {
       const route = this.$route

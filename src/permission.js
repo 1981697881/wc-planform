@@ -19,7 +19,9 @@ import {
   getLoadedMenuType,
   setLoadedMenuType,
   resetDynamicMenu,
-  resolveTargetPath
+  resolveTargetPath,
+  findReportFirstMenuPath,
+  filterSidebarRoutes
 } from '@/utils/dynamicMenu'
 
 NProgress.configure({
@@ -45,6 +47,15 @@ router.beforeEach(async (to, from, next) => {
         resetDynamicMenu()
       }
       if (getHasMenu()) {
+        if (getLoginMode() === 'report' && (to.path === '/' || to.path === '/dashboard')) {
+          const reportPath = findReportFirstMenuPath(
+            router.options.routes.filter(route => route.path !== '/login' && route.path !== '/404' && !(route.path === '/' && route.redirect === '/dashboard'))
+          )
+          if (reportPath && reportPath !== to.path) {
+            next({ path: reportPath, replace: true })
+            return
+          }
+        }
         const hasGetUserInfo = store.getters.name
       if (hasGetUserInfo) {
         next()

@@ -1,5 +1,23 @@
 import _router from '../router/router' // 获取组件的方法
 
+const DEFAULT_MENU_ICONS = {
+  reportBoard: 'chart',
+  leaderDashboard: 'chart',
+  pendingSendOrders: 'list'
+}
+
+function resolveMenuIcon(e) {
+  const icon = e.cuicon || e.icon || e.menuIcon || ''
+  if (icon) return icon
+  if (e.id && DEFAULT_MENU_ICONS[e.id]) {
+    return DEFAULT_MENU_ICONS[e.id]
+  }
+  if (Number(e.type) === 1) {
+    return 'nested'
+  }
+  return 'documentation'
+}
+
 /**
  * 生成路由
  * @param {Array} routerlist 格式化路由
@@ -21,8 +39,12 @@ export function addRouter(routerlist) {
 
     if (e.text) { // meta
       e_new = Object.assign({}, e_new, {
-        meta: { title: e.text, icon: '', id: e.smuId }
+        meta: { title: e.text, icon: resolveMenuIcon(e), id: e.smuId }
       })
+    }
+
+    if (e.children && e.children.length > 1) {
+      e_new.alwaysShow = true
     }
 
     if (e.children) { // 下级
