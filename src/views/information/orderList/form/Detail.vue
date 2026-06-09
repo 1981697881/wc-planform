@@ -9,6 +9,7 @@
               type="date"
               value-format="yyyy-MM-dd"
               style="width: 100%"
+              :disabled="readonly"
               placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
@@ -25,19 +26,19 @@
             </el-select>
           </el-form-item>-->
           <el-form-item :label="'母订单号'" prop="poNo">
-            <el-input v-model="form.poNo"></el-input>
+            <el-input v-model="form.poNo" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'子订单号'" prop="subPoNo">
-            <el-input v-model="form.subPoNo"></el-input>
+            <el-input v-model="form.subPoNo" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item :label="'销售地'">
-            <el-select style="width: 100%" v-model="form.saleOrgin" placeholder="请选择">
+            <el-select style="width: 100%" v-model="form.saleOrgin" :disabled="readonly" placeholder="请选择">
               <el-option
                 v-for="(item,index) in saleOrginList"
                 :key="index"
@@ -54,6 +55,7 @@
                        :remote-method="remoteCustMethod"
                        :loading="loading"
                        v-model="form.custId"
+                       :disabled="readonly"
                        @change="handleCustomerChange"
                        placeholder="请选择">
               <el-option
@@ -67,7 +69,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'产品数量'">
-            <el-input-number :min="0" v-model="form.prdQty"></el-input-number>
+            <el-input-number :min="0" v-model="form.prdQty" :disabled="readonly"></el-input-number>
           </el-form-item>
         </el-col>
         <!--<el-col :span="12">
@@ -80,24 +82,24 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item :label="'产品名称'" prop="productName">
-            <el-input v-model="form.productName"></el-input>
+            <el-input v-model="form.productName" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'材质'">
-            <el-input v-model="form.productTxture"></el-input>
+            <el-input v-model="form.productTxture" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'油漆工艺'">
-            <el-input v-model="form.productPaint"></el-input>
+            <el-input v-model="form.productPaint" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="16">
           <el-form-item :label="'产品名称(简略)'">
-            <el-input v-model="form.prodShortName"></el-input>
+            <el-input v-model="form.prodShortName" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -107,6 +109,7 @@
               type="date"
               value-format="yyyy-MM-dd"
               style="width: 100%"
+              :disabled="readonly"
               placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
@@ -115,12 +118,12 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item :label="'五金单'">
-            <el-input v-model="form.wuJin"></el-input>
+            <el-input v-model="form.wuJin" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'交货日期'">
-            <el-input v-model="form.orderDate"></el-input>
+            <el-input v-model="form.orderDate" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -130,6 +133,7 @@
               type="date"
               value-format="yyyy-MM-dd"
               style="width: 100%"
+              :disabled="readonly"
               placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
@@ -148,6 +152,7 @@
               type="date"
               value-format="yyyy-MM-dd"
               style="width: 100%"
+              :disabled="readonly"
               placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
@@ -176,29 +181,29 @@
         </el-col>-->
         <el-col :span="8">
           <el-form-item :label="'页数'">
-            <el-input v-model="form.pageNo"></el-input>
+            <el-input v-model="form.pageNo" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'设计员'">
-            <el-input v-model="form.designer"></el-input>
+            <el-input v-model="form.designer" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item :label="'发货地址'">
-            <el-input v-model="form.custAddr"></el-input>
+            <el-input v-model="form.custAddr" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'工地地址'">
-            <el-input v-model="form.workSiteAddr"></el-input>
+            <el-input v-model="form.workSiteAddr" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'联系电话'">
-            <el-input v-model="form.custTel"></el-input>
+            <el-input v-model="form.custTel" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
 
@@ -206,17 +211,17 @@
       <el-row :gutter="20">
         <el-col :span="8">
           <el-form-item :label="'发货单号'">
-            <el-input v-model="form.sendNo"></el-input>
+            <el-input v-model="form.sendNo" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'发货方式'">
-            <el-input v-model="form.sendWay"></el-input>
+            <el-input v-model="form.sendWay" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item :label="'合同状态'">
-            <el-radio-group v-model="form.poStatus">
+            <el-radio-group v-model="form.poStatus" :disabled="readonly">
               <el-radio label="发齐">发齐</el-radio>
               <el-radio label="未发齐">未发齐</el-radio>
             </el-radio-group>
@@ -226,23 +231,26 @@
       <el-row :gutter="20">
         <el-col :span="24">
           <el-form-item :label="'备注'">
-            <el-input v-model="form.note"></el-input>
+            <el-input v-model="form.note" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item :label="'物料清单'">
+          <el-form-item :label="'物料清单'" v-if="!readonly">
             <el-button @click="setRow">增加</el-button>
             <el-button @click="delRow">删除</el-button>
+          </el-form-item>
+          <el-form-item :label="'物料清单'" v-else>
+            <span></span>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-table class="tableBox" ref="multipleTable" @selection-change="handleSelectionChange" border height="250px"
-                  stripe size="mini" :highlight-current-row="true" :data="form.prdOrderEntry" align="center"
+        <el-table class="tableBox" :class="{ 'table-readonly': readonly }" ref="multipleTable" @selection-change="handleSelectionChange" border height="250px"
+                  stripe size="mini" :highlight-current-row="!readonly" :data="form.prdOrderEntry" align="center"
                   :cell-style="myclass" highlight-current-row>
-          <el-table-column align="center" type="selection"></el-table-column>
+          <el-table-column v-if="!readonly" align="center" type="selection"></el-table-column>
           <el-table-column prop="date" label="序号" type="index" align="center" sortable></el-table-column>
           <el-table-column
             v-for="(t,i) in columns"
@@ -256,7 +264,7 @@
 
               <div v-if="t.name === 'itemType'">
                 <el-select filterable
-                         style="width: 100%" v-if="!t.sfkgg" v-model="scope.row[t.name]"
+                         style="width: 100%" v-if="!t.sfkgg && !readonly" v-model="scope.row[t.name]"
                           placeholder="请选择">
                  <el-option
                    v-for="(item, index) in optionList"
@@ -268,7 +276,7 @@
                 <span>{{scope.row[t.name]}}</span>
               </div>
               <div v-else>
-                <el-input v-if="!t.sfkgg" v-model="scope.row[t.name]" clearable/>
+                <el-input v-if="!t.sfkgg && !readonly" v-model="scope.row[t.name]" clearable/>
                 <span>{{scope.row[t.name]}}</span>
               </div>
             </template>
@@ -277,7 +285,8 @@
       </el-row>
     </el-form>
     <div slot="footer" style="text-align:center;">
-      <el-button type="primary" @click="saveData('form')">保存</el-button>
+      <el-button v-if="!readonly" type="primary" @click="saveData('form')">保存</el-button>
+      <el-button v-else @click="$emit('hideDialog', false)">关闭</el-button>
     </div>
   </div>
 </template>
@@ -290,6 +299,10 @@ export default {
     listInfo: {
       type: Object,
       default: null
+    },
+    readonly: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -408,6 +421,7 @@ export default {
       }
     },
     handleCustomerChange(custId) {
+      if (this.readonly) return
       if (this.form.workSiteAddr) return;
       const customer = this.custList.find(item => item.id === custId);
       if (customer && customer.addr) {
@@ -519,5 +533,21 @@ export default {
 
   .tableBox .current-row .el-select + span {
     display: none;
+  }
+
+  .table-readonly .el-input {
+    display: none !important;
+  }
+
+  .table-readonly .el-input + span {
+    display: inline !important;
+  }
+
+  .table-readonly .el-select {
+    display: none !important;
+  }
+
+  .table-readonly .el-select + span {
+    display: inline !important;
   }
 </style>

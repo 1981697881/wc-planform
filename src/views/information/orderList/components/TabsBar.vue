@@ -285,6 +285,16 @@ export default {
         })
       }
     },
+    handlerView() {
+      if (this.clickData.id) {
+        this.$emit('showViewDialog', this.clickData)
+      } else {
+        this.$message({
+          message: '无选中行',
+          type: 'warning'
+        })
+      }
+    },
     submitUpload() {
       this.$refs.upload.submit()
     },
