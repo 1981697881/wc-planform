@@ -39,7 +39,7 @@ export default {
     return {
       reportList: [
         {
-          title: '领导看板',
+          title: '制造看板',
           desc: '各部门本周/本月/今年交工序累计数量',
           path: '/reportBoard/leaderDashboard',
           icon: 'el-icon-data-analysis'

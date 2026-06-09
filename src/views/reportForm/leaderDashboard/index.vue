@@ -9,7 +9,7 @@
       </div>
     </div>
 
-    <div class="board-title">领导看板</div>
+    <div class="board-title">制造看板</div>
 
     <div class="card-list">
       <div
