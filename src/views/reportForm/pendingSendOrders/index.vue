@@ -42,6 +42,7 @@ export default {
       columns: [
         { text: '订单号', name: 'poNo', width: '120px' },
         { text: '子订单号', name: 'poSubNo', width: '120px' },
+        { text: '收工序名称', name: 'recProcessName', width: '120px' },
         { text: '产品编码', name: 'itemNumber', width: '110px' },
         { text: '产品名称', name: 'itemName', width: '120px' },
         { text: '部件名称', name: 'departName', width: '120px' },

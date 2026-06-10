@@ -66,7 +66,7 @@ export const StaticRouterMap = [{
     component: () => import('@/views/reportForm/leaderDashboard/index'),
     name: 'LeaderDashboard',
     meta: {
-      title: '制造看板'
+      title: '制造中心'
     }
   }, {
     path: 'pendingSendOrders',
@@ -183,7 +183,7 @@ export const StaticRouterMap = [{
     component: () => import('@/views/reportForm/leaderDashboard/index'),
     name: 'LeaderDashboard',
     meta: {
-      title: '制造看板'
+      title: '制造中心'
     }
   }, {
     path: 'pendingSendOrders',
