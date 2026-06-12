@@ -55,13 +55,15 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar'
-    ])
+    ]),
+    name() {
+      return this.$store.state.user.username || getToken('wcun') || ''
+    }
   },
   data() {
     return {
       visible: null,
-      fid: null,
-      name: getToken('wcun')
+      fid: null
     };
   },
   methods: {

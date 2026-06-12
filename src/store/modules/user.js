@@ -8,6 +8,8 @@ function clearSession({ commit, dispatch }) {
   commit('SET_PER', '')
   commit('SET_NAME', '')
   commit('SET_AVATAR', '')
+  commit('SET_USERNAME', '')
+  commit('SET_PASSWORD', '')
   removeToken('wcrx')
   removeToken('wcps')
   removeToken('wcun')
@@ -143,10 +145,11 @@ const actions = {
     })
   },
 
-  // remove token
-  resetToken({ commit, dispatch }) {
+  // 仅清除 token（用于接口刷新 token，不能清空菜单/tab/用户名）
+  resetToken({ commit }) {
     return new Promise(resolve => {
-      clearSession({ commit, dispatch })
+      commit('SET_TOKEN', '')
+      removeToken('wcrx')
       resolve()
     })
   },

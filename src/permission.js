@@ -119,7 +119,7 @@ function gotoRouter(to, next) {
         getLoginMode()
       )
 
-      store.dispatch('permission/generateRoutes', router.options.routes)
+      store.dispatch('permission/generateRoutes', asyncRouter)
 
       if (getLoginMode() === 'report') {
         store.dispatch('app/closeSideBar', { withoutAnimation: true })
@@ -128,7 +128,8 @@ function gotoRouter(to, next) {
       next({ path: targetPath, query: to.query, hash: to.hash, replace: true })
     })
     .catch(e => {
-      store.dispatch('user/resetToken')
+      store.dispatch('user/logout')
+      next('/login')
     })
 }
 

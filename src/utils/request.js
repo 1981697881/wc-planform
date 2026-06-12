@@ -66,7 +66,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
        if(res.status === 20010){//需要重新登录
-        store.dispatch('user/resetToken').then(() => {
+        store.dispatch('user/logout').then(() => {
           //location.reload()
           MessageBox('登录出错, 是否重试?', '提示', {
             confirmButtonText: '确定',
@@ -90,7 +90,7 @@ service.interceptors.response.use(
           cancelButtonText: 'Cancel',
           type: 'warning'
         }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
+          store.dispatch('user/logout').then(() => {
             location.reload()
           })
         })
@@ -130,7 +130,7 @@ service.interceptors.response.use(
   error => {
     console.log('err' + error) // for debug
     if(error == 'Error: Request failed with status code 403'){
-      store.dispatch('user/resetToken').then(() => {
+      store.dispatch('user/logout').then(() => {
         //location.reload()
         MessageBox('登录出错, 是否重试?', '提示', {
           confirmButtonText: '确定',

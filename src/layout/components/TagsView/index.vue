@@ -27,7 +27,14 @@
 
 <script>
 import ScrollPane from './ScrollPane'
-import path from 'path'
+
+function resolveRoutePath(basePath, routePath) {
+  if (routePath.startsWith('/')) {
+    return routePath.replace(/\/+/g, '/')
+  }
+  const base = basePath.endsWith('/') ? basePath.slice(0, -1) : basePath
+  return `${base}/${routePath}`.replace(/\/+/g, '/')
+}
 
 export default {
   components: { ScrollPane },
@@ -53,6 +60,14 @@ export default {
       this.addTags()
       this.moveToCurrentTag()
     },
+    routes: {
+      handler(routes) {
+        if (routes && routes.length) {
+          this.initTags()
+          this.addTags()
+        }
+      }
+    },
     visible(value) {
       if (value) {
         document.body.addEventListener('click', this.closeMenu)
@@ -73,7 +88,7 @@ export default {
       let tags = []
       routes.forEach(route => {
         if (route.meta && route.meta.affix) {
-          const tagPath = path.resolve(basePath, route.path)
+          const tagPath = resolveRoutePath(basePath, route.path)
           tags.push({
             fullPath: tagPath,
             path: tagPath,
@@ -82,7 +97,7 @@ export default {
           })
         }
         if (route.children) {
-          const tempTags = this.filterAffixTags(route.children, route.path)
+          const tempTags = this.filterAffixTags(route.children, resolveRoutePath(basePath, route.path))
           if (tempTags.length >= 1) {
             tags = [...tags, ...tempTags]
           }
@@ -93,16 +108,13 @@ export default {
     initTags() {
       const affixTags = this.affixTags = this.filterAffixTags(this.routes)
       for (const tag of affixTags) {
-        // Must have tag name
-        if (tag.name) {
-          this.$store.dispatch('tagsView/addVisitedView', tag)
-        }
+        this.$store.dispatch('tagsView/addVisitedView', tag)
       }
     },
     addTags() {
-      const { name } = this.$route
-      if (name) {
-        this.$store.dispatch('tagsView/addView', this.$route)
+      const route = this.$route
+      if (route.path && route.path !== '/login' && route.meta && route.meta.title) {
+        this.$store.dispatch('tagsView/addView', route)
       }
       return false
     },
