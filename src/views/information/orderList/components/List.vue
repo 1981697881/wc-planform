@@ -77,7 +77,7 @@ export default {
         const list = this.list.records
         const data = this.formatJson(filterVal, list);
         // 这里还是使用export_json_to_excel方法比较好，方便操作数据
-        excel.export_json_to_excel(tHeader,data,'产品信息')
+        excel.export_json_to_excel(tHeader,data,'订单清单管理')
       })
     },
     formatJson(filter, jsonDate){

@@ -3,10 +3,38 @@
     <el-form v-model="search" :size="'mini'" :label-width="'80px'">
       <el-row :gutter="10">
         <el-col :span="4">
-          <el-form-item :label="'关键字'">
-            <el-input v-model="search.itemName" placeholder="关键字"/>
+          <el-form-item :label="'产品名称'">
+            <el-input v-model="search.itemName" placeholder="产品名称"/>
           </el-form-item>
         </el-col>
+        <el-col :span="4">
+          <el-form-item :label="'交工序名称'">
+            <el-input v-model="search.sendProcessName" placeholder="交工序名称"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item :label="'部件名称'">
+            <el-input v-model="search.departName" placeholder="部件名称"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-form-item :label="'工程地址'">
+            <el-input v-model="search.workSiteAddr" placeholder="工程地址"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="2">
+          <el-button :size="'mini'" type="primary" icon="el-icon-search" @click="query">查询</el-button>
+        </el-col>
+        <el-button-group style="float:right">
+          <!-- <el-button v-for="(t,i) in btnList" :key="i" v-if="t.category == 'default'" :size="'mini'" type="primary" :icon="t.cuicon" @click="onFun(t.path)">{{t.menuName}}</el-button>-->
+          <!-- <el-button :size="'mini'" type="primary" icon="el-icon-plus" @click="handlerAdd">新增</el-button>
+          <el-button :size="'mini'" type="primary" icon="el-icon-edit" @click="handlerAlter">修改</el-button>
+         <el-button :size="'mini'" type="primary" icon="el-icon-delete" @click="Delivery">删除</el-button>-->
+          <el-button :size="'mini'" type="primary" icon="el-icon-download" @click="exportData">导出</el-button>
+          <el-button :size="'mini'" type="primary" icon="el-icon-refresh"    @click="upload">刷新</el-button>
+        </el-button-group>
+      </el-row>
+      <el-row :gutter="10">
         <el-col :span="4">
           <el-form-item :label="'交货日期'">
             <el-input v-model="search.orderDate1" placeholder="交货日期"/>
@@ -29,17 +57,6 @@
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="2">
-          <el-button :size="'mini'" type="primary" icon="el-icon-search" @click="query">查询</el-button>
-        </el-col>
-        <el-button-group style="float:right">
-          <!-- <el-button v-for="(t,i) in btnList" :key="i" v-if="t.category == 'default'" :size="'mini'" type="primary" :icon="t.cuicon" @click="onFun(t.path)">{{t.menuName}}</el-button>-->
-          <!-- <el-button :size="'mini'" type="primary" icon="el-icon-plus" @click="handlerAdd">新增</el-button>
-          <el-button :size="'mini'" type="primary" icon="el-icon-edit" @click="handlerAlter">修改</el-button>
-         <el-button :size="'mini'" type="primary" icon="el-icon-delete" @click="Delivery">删除</el-button>-->
-          <el-button :size="'mini'" type="primary" icon="el-icon-download" @click="exportData">导出</el-button>
-          <el-button :size="'mini'" type="primary" icon="el-icon-refresh"    @click="upload">刷新</el-button>
-        </el-button-group>
       </el-row>
     </el-form>
   </div>
@@ -84,6 +101,9 @@
         btnList: [],
         search: {
           itemName: null,
+          sendProcessName: null,
+          departName: null,
+          workSiteAddr: null,
           orderDate1: null,
         }
       };
@@ -108,6 +128,9 @@
       qFilter() {
         let obj = {}
         this.search.itemName != null && this.search.itemName != '' ? obj.itemName = this.search.itemName : null
+        this.search.sendProcessName != null && this.search.sendProcessName != '' ? obj.sendProcessName = this.search.sendProcessName : null
+        this.search.departName != null && this.search.departName != '' ? obj.departName = this.search.departName : null
+        this.search.workSiteAddr != null && this.search.workSiteAddr != '' ? obj.workSiteAddr = this.search.workSiteAddr : null
         this.search.orderDate1 != null && this.search.orderDate1 != '' ? obj.orderDate1 = this.search.orderDate1 : null
         this.value != null && this.value != undefined ? obj.endDate = this.value[1] : null
         this.value != null && this.value != undefined ? obj.startDate = this.value[0] : null
@@ -124,6 +147,10 @@
       },
       upload() {
         this.search.itemName = ''
+        this.search.sendProcessName = ''
+        this.search.departName = ''
+        this.search.workSiteAddr = ''
+        this.search.orderDate1 = ''
         this.value = ''
         this.$emit('uploadList')
       },
