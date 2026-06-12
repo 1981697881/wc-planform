@@ -3,6 +3,22 @@ import { getToken, setToken, removeToken, setUserName, setPassword, setPer} from
 import { resetRouter } from '@/router'
 import { resetDynamicMenu } from '@/utils/dynamicMenu'
 
+function clearSession({ commit, dispatch }) {
+  commit('SET_TOKEN', '')
+  commit('SET_PER', '')
+  commit('SET_NAME', '')
+  commit('SET_AVATAR', '')
+  removeToken('wcrx')
+  removeToken('wcps')
+  removeToken('wcun')
+  removeToken('wcper')
+  resetDynamicMenu()
+  resetRouter()
+  dispatch('tagsView/resetState', null, { root: true })
+  dispatch('menu/resetState', null, { root: true })
+  dispatch('permission/resetState', null, { root: true })
+}
+
 const state = {
   token: getToken('wcrx'),
   name: '',
@@ -120,34 +136,17 @@ const actions = {
   },
 
   // user logout
-  logout({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      commit('SET_TOKEN', '')
-      commit('SET_PER', '')
-      removeToken('wcrx')
-      removeToken('wcps')
-      removeToken('wcun')
-      resetDynamicMenu()
-      resetRouter()
+  logout({ commit, dispatch }) {
+    return new Promise(resolve => {
+      clearSession({ commit, dispatch })
       resolve()
-      /*}).catch(error => {
-        reject(error)
-      })*/
-
-      /* commit('SET_TOKEN', '')
-      removeToken()
-      resetRouter()
-      localStorage.removeItem('routes')
-      router */
     })
   },
 
   // remove token
-  resetToken({ commit }) {
+  resetToken({ commit, dispatch }) {
     return new Promise(resolve => {
-      commit('SET_TOKEN', '')
-      removeToken('wcrx')
-      resetDynamicMenu()
+      clearSession({ commit, dispatch })
       resolve()
     })
   },

@@ -9,6 +9,9 @@ const state = {
 const mutations = {
   SET_ROUTER: (state, routes) => {
     state.routes = routes
+  },
+  RESET_STATE: state => {
+    state.routes = []
   }
 }
 
@@ -26,6 +29,9 @@ const actions = {
         reject(error)
       })
     })
+  },
+  resetState({ commit }) {
+    commit('RESET_STATE')
   }
 }
 

@@ -68,6 +68,11 @@ const state = {
           break
         }
       }
+    },
+
+    RESET_STATE: state => {
+      state.visitedViews = []
+      state.cachedViews = []
     }
   }
   
@@ -154,6 +159,10 @@ const state = {
   
     updateVisitedView({ commit }, view) {
       commit('UPDATE_VISITED_VIEW', view)
+    },
+
+    resetState({ commit }) {
+      commit('RESET_STATE')
     }
   }
   

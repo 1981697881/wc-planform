@@ -44,6 +44,10 @@ const mutations = {
     state.addRoutes = routes
 
     state.routes = StaticRouterMap.concat(routes)
+  },
+  RESET_STATE: state => {
+    state.routes = []
+    state.addRoutes = []
   }
 }
 
@@ -53,6 +57,9 @@ const actions = {
       commit('SET_ROUTES', accessedRoutes)
       resolve(accessedRoutes)
     })
+  },
+  resetState({ commit }) {
+    commit('RESET_STATE')
   }
 }
 

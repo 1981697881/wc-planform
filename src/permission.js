@@ -1,4 +1,4 @@
-import router from './router'
+import router, { StaticRouterMap } from './router'
 import store from './store'
 import {
   Message
@@ -107,9 +107,7 @@ function gotoRouter(to, next) {
     })
     .then(asyncRouter => {
       router.addRoutes(asyncRouter)
-      for(var i = 0;i<asyncRouter.length;i++){
-        router.options.routes[3+i] = asyncRouter[i]
-      }
+      router.options.routes = StaticRouterMap.concat(asyncRouter)
       setHasMenu(true)
       setLoadedMenuType(menuType)
       store.dispatch('menu/setRouterList', asyncRouter)
