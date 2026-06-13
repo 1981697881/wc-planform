@@ -37,7 +37,7 @@
       <el-row :gutter="10">
         <el-col :span="4">
           <el-form-item :label="'交货日期'">
-            <el-input v-model="search.orderDate1" placeholder="交货日期"/>
+            <el-input v-model="search.planDeliveryDate" placeholder="预计交货日期"/>
           </el-form-item>
         </el-col>
         <el-col :span="6" style="display: inline-block">
@@ -104,7 +104,7 @@
           sendProcessName: null,
           departName: null,
           workSiteAddr: null,
-          orderDate1: null,
+          planDeliveryDate: null,
         }
       };
     },
@@ -131,7 +131,7 @@
         this.search.sendProcessName != null && this.search.sendProcessName != '' ? obj.sendProcessName = this.search.sendProcessName : null
         this.search.departName != null && this.search.departName != '' ? obj.departName = this.search.departName : null
         this.search.workSiteAddr != null && this.search.workSiteAddr != '' ? obj.workSiteAddr = this.search.workSiteAddr : null
-        this.search.orderDate1 != null && this.search.orderDate1 != '' ? obj.orderDate1 = this.search.orderDate1 : null
+        this.search.planDeliveryDate != null && this.search.planDeliveryDate != '' ? obj.planDeliveryDate = this.search.planDeliveryDate : null
         this.value != null && this.value != undefined ? obj.endDate = this.value[1] : null
         this.value != null && this.value != undefined ? obj.startDate = this.value[0] : null
         return obj
@@ -150,7 +150,7 @@
         this.search.sendProcessName = ''
         this.search.departName = ''
         this.search.workSiteAddr = ''
-        this.search.orderDate1 = ''
+        this.search.planDeliveryDate = ''
         this.value = ''
         this.$emit('uploadList')
       },

@@ -35,6 +35,7 @@ export default {
         { text: '客户名称', name: 'custName' },
         /*{ text: '联系电话', name: 'tel' },*/
         { text: '客户地址', name: 'addr' },
+        { text: '详细工程地址', name: 'projectAddr' },
       ]
     }
   },

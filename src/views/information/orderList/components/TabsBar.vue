@@ -76,6 +76,11 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="4">
+          <el-form-item :label="'工程地址'">
+            <el-input v-model="search.workSiteAddr" placeholder="工程地址"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
           <el-form-item :label="'销售地'">
             <el-select style="width: 100%" v-model="search.saleOrgin" placeholder="请选择">
               <el-option
@@ -169,6 +174,7 @@ export default {
         custName: '',
         poNo: '',
         subPoNo: '',
+        workSiteAddr: '',
         saleOrgin: '',
         poStatus: '',
       }
@@ -201,6 +207,7 @@ export default {
       this.search.poStatus != null && this.search.poStatus != '' ? obj.poStatus = this.search.poStatus : null
       this.search.poNo != null && this.search.poNo != '' ? obj.poNo = this.search.poNo : null
       this.search.subPoNo != null && this.search.subPoNo != '' ? obj.subPoNo = this.search.subPoNo : null
+      this.search.workSiteAddr != null && this.search.workSiteAddr != '' ? obj.workSiteAddr = this.search.workSiteAddr : null
       this.value != null && this.value != undefined ? obj.dateE = this.value[1] : null
       this.value != null && this.value != undefined ? obj.dateS = this.value[0] : null
       return obj
@@ -252,6 +259,7 @@ export default {
       this.search.saleOrgin = ''
       this.search.poNo = ''
       this.search.subPoNo = ''
+      this.search.workSiteAddr = ''
       this.value = ''
       this.$emit('uploadList')
     },

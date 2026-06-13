@@ -59,8 +59,8 @@
                        @change="handleCustomerChange"
                        placeholder="请选择">
               <el-option
-                      v-for="(item,index) in custList"
-                      :key="index"
+                      v-for="item in custList"
+                      :key="item.id"
                       :label="item.custName+'-'+item.addr"
                       :value="item.id">
               </el-option>
@@ -187,6 +187,13 @@
         <el-col :span="8">
           <el-form-item :label="'设计员'">
             <el-input v-model="form.designer" :disabled="readonly"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="16">
+          <el-form-item :label="'工序进度情况'">
+            <el-input v-model="form.processProgress" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -319,10 +326,12 @@ export default {
         deptName: null,*/
         subPoNo: null,
         custId: null,
+        custName: null,
         productTxture: null,
         productPaint: null,
         pageNo: null,
         designer: null,
+        processProgress: null,
         deliveryDate: null,
         custReqDate: null,
         custAddr: null,
@@ -373,36 +382,92 @@ export default {
       }
     }
   },
-  mounted() {
-    if (this.listInfo) {
-      this.form = this.listInfo;
+  watch: {
+    listInfo: {
+      immediate: true,
+      handler(val) {
+        if (val) {
+          this.initFormData(val)
+        } else {
+          this.custList = []
+          this.getCustsArray()
+        }
+      }
     }
-    // 优先确保当前客户回显（先加载选中客户，再加载默认列表）
-    if (this.form.custId) {
-      this.ensureCurrentCustomerInList();
-    }
-    this.getCustsArray(); // 加载默认客户列表（异步，最终会被 ensure... 修正）
   },
   methods: {
-    // 确保当前选中的客户在 custList 中，否则根据 id 查询并添加
-    ensureCurrentCustomerInList() {
-      const custId = this.form.custId;
-      if (!custId) return;
-      const exists = this.custList.some(item => item.id === custId);
-      if (!exists) {
-        this.loading = true;
-        getCustomerByPage({ pageNum: 1, pageSize: 1 }, { id: custId }).then(res => {
-          this.loading = false;
-          if (res.flag && res.data.records && res.data.records.length) {
-            const customer = res.data.records[0];
-            if (!this.custList.some(item => item.id === customer.id)) {
-              this.custList.unshift(customer); // 添加到列表头部保证回显
-            }
-          }
-        }).catch(() => {
-          this.loading = false;
-        });
+    normalizeId(id) {
+      if (id === null || id === undefined || id === '') return null
+      const num = Number(id)
+      return Number.isNaN(num) ? String(id) : num
+    },
+    isSameId(a, b) {
+      if (a === null || a === undefined || b === null || b === undefined) return false
+      return String(a) === String(b)
+    },
+    initFormData(listInfo) {
+      this.form = { ...this.form, ...listInfo }
+      if (this.form.custId !== null && this.form.custId !== undefined && this.form.custId !== '') {
+        this.form.custId = this.normalizeId(this.form.custId)
+        this.initCustomerOptions()
       }
+      this.getCustsArray()
+    },
+    initCustomerOptions() {
+      const custId = this.normalizeId(this.form.custId)
+      if (!custId) return
+      const customer = {
+        id: custId,
+        custName: this.form.custName || '',
+        addr: this.form.workSiteAddr || this.form.custAddr || ''
+      }
+      if (customer.custName) {
+        const exists = this.custList.some(item => this.isSameId(item.id, customer.id))
+        if (!exists) {
+          this.custList = [customer, ...this.custList]
+        }
+      }
+    },
+    ensureCurrentCustomerInList() {
+      const custId = this.normalizeId(this.form.custId)
+      if (!custId) return Promise.resolve()
+      const exists = this.custList.some(item => this.isSameId(item.id, custId))
+      if (exists) return Promise.resolve()
+
+      const query = { id: custId }
+      if (this.form.custName) {
+        query.custName = this.form.custName
+      }
+
+      this.loading = true
+      return getCustomerByPage({ pageNum: 1, pageSize: 10 }, query).then(res => {
+        this.loading = false
+        if (res.flag && res.data.records && res.data.records.length) {
+          const customer = res.data.records.find(item => this.isSameId(item.id, custId)) || res.data.records[0]
+          customer.id = this.normalizeId(customer.id)
+          if (!this.custList.some(item => this.isSameId(item.id, customer.id))) {
+            this.custList.unshift(customer)
+          }
+          if (!this.form.custName && customer.custName) {
+            this.form.custName = customer.custName
+          }
+        } else if (this.form.custName) {
+          this.custList.unshift({
+            id: custId,
+            custName: this.form.custName,
+            addr: this.form.workSiteAddr || this.form.custAddr || ''
+          })
+        }
+      }).catch(() => {
+        this.loading = false
+        if (this.form.custName) {
+          this.custList.unshift({
+            id: custId,
+            custName: this.form.custName,
+            addr: this.form.workSiteAddr || this.form.custAddr || ''
+          })
+        }
+      })
     },
     remoteMethod(query) {
       if (query !== '') {
@@ -414,18 +479,20 @@ export default {
     },
     remoteCustMethod(query) {
       if (query !== '') {
-        this.loading = true;
-        this.getCustsArray({custName: query});
+        this.loading = true
+        this.getCustsArray({ custName: query })
       } else {
-        this.custList = [];
+        this.getCustsArray()
       }
     },
     handleCustomerChange(custId) {
       if (this.readonly) return
-      if (this.form.workSiteAddr) return;
-      const customer = this.custList.find(item => item.id === custId);
-      if (customer && customer.addr) {
-        this.form.workSiteAddr = customer.addr;
+      const customer = this.custList.find(item => this.isSameId(item.id, custId))
+      if (customer) {
+        this.form.custName = customer.custName || ''
+        if (!this.form.workSiteAddr && customer.addr) {
+          this.form.workSiteAddr = customer.addr
+        }
       }
     },
     myclass({row, columnIndex}) {
@@ -468,13 +535,21 @@ export default {
       }
     },
     getCustsArray(val = {}, data = { pageNum: 1, pageSize: 100 }) {
+      const currentCustomer = this.custList.find(item => this.isSameId(item.id, this.form.custId))
       getCustomerByPage(data, val).then(res => {
         if (res.flag) {
-          this.loading = false;
-          this.custList = res.data.records || [];
-          this.ensureCurrentCustomerInList(); // ← 关键：合并当前客户
+          this.loading = false
+          const records = (res.data.records || []).map(item => ({
+            ...item,
+            id: this.normalizeId(item.id)
+          }))
+          if (currentCustomer && !records.some(item => this.isSameId(item.id, currentCustomer.id))) {
+            records.unshift(currentCustomer)
+          }
+          this.custList = records
+          return this.ensureCurrentCustomerInList()
         }
-      });
+      })
     },
     getUsersArray(val = {}, data = {
       pageNum: 1,

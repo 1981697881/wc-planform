@@ -25,6 +25,13 @@
           </el-form-item>
         </el-col>
       </el-row>
+      <el-row :gutter="20">
+        <el-col :span="24">
+          <el-form-item :label="'详细工程地址'">
+            <el-input v-model="form.projectAddr"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
     <div slot="footer" style="text-align:center">
       <el-button type="primary" @click="saveData('form')">保存</el-button>
@@ -48,6 +55,7 @@ export default {
         custName: null,
         tel: null,
         addr: null,
+        projectAddr: null,
       },
       options: [],
       disPl: true,
