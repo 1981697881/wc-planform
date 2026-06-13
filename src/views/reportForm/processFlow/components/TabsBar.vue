@@ -1,6 +1,6 @@
 <template>
   <div class="list-header">
-    <el-form v-model="search" :size="'mini'" :label-width="'80px'">
+    <el-form v-model="search" :size="'mini'" :label-width="'100px'">
       <el-row :gutter="10">
         <el-col :span="4">
           <el-form-item :label="'产品名称'">
@@ -31,7 +31,7 @@
           <el-button :size="'mini'" type="primary" icon="el-icon-edit" @click="handlerAlter">修改</el-button>
          <el-button :size="'mini'" type="primary" icon="el-icon-delete" @click="Delivery">删除</el-button>-->
           <el-button :size="'mini'" type="primary" icon="el-icon-download" @click="exportData">导出</el-button>
-          <el-button :size="'mini'" type="primary" icon="el-icon-refresh"    @click="upload">刷新</el-button>
+          <el-button :size="'mini'" type="primary" icon="el-icon-refresh" @click="upload">刷新</el-button>
         </el-button-group>
       </el-row>
       <el-row :gutter="10">
