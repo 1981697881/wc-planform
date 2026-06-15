@@ -36,6 +36,11 @@
       </el-row>
       <el-row :gutter="10">
         <el-col :span="4">
+          <el-form-item :label="'订单号'">
+            <el-input v-model="search.poNo" placeholder="订单号"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
           <el-form-item :label="'交货日期'">
             <el-input v-model="search.planDeliveryDate" placeholder="预计交货日期"/>
           </el-form-item>
@@ -100,6 +105,7 @@
         value: '',
         btnList: [],
         search: {
+          poNo: null,
           itemName: null,
           sendProcessName: null,
           departName: null,
@@ -127,6 +133,7 @@
       // 查询条件过滤
       qFilter() {
         let obj = {}
+        this.search.poNo != null && this.search.poNo != '' ? obj.poNo = this.search.poNo : null
         this.search.itemName != null && this.search.itemName != '' ? obj.itemName = this.search.itemName : null
         this.search.sendProcessName != null && this.search.sendProcessName != '' ? obj.sendProcessName = this.search.sendProcessName : null
         this.search.departName != null && this.search.departName != '' ? obj.departName = this.search.departName : null
@@ -146,6 +153,7 @@
         this.$emit('exportData')
       },
       upload() {
+        this.search.poNo = ''
         this.search.itemName = ''
         this.search.sendProcessName = ''
         this.search.departName = ''

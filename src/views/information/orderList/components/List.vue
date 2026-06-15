@@ -42,7 +42,7 @@ export default {
         { text: '客户代码', name: 'custCode' },
         { text: '客户名称', name: 'custName' },
         { text: '工地地址', name: 'workSiteAddr' },
-        { text: '产品名称(简略)', name: 'prodShortName' },
+        { text: '产品名称详细', name: 'prodShortName' },
         { text: '产品名称', name: 'productName' },
         { text: '材质', name: 'productTxture' },
         { text: '油漆工艺', name: 'productPaint' },
