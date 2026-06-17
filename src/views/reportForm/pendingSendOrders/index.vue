@@ -10,6 +10,10 @@
       </div>
     </div>
 
+    <div v-if="recProcessName" class="process-name-bar">
+      收工序名称：{{ recProcessName }}
+    </div>
+
     <div class="table-section">
       <list
         class="list-main"
@@ -38,10 +42,10 @@ export default {
     return {
       loading: false,
       list: {},
+      recProcessName: '',
       updateTime: '',
       columns: [
         { text: '子订单号', name: 'poSubNo', width: '120px' },
-        { text: '收工序名称', name: 'recProcessName', width: '120px' },
         { text: '部件名称', name: 'departName', width: '120px' },
         { text: '产品部件数量', name: 'deptQty', width: '110px' },
         { text: '接收时间', name: 'receiveDate', width: '110px' },
@@ -83,6 +87,9 @@ export default {
               ...row,
               recPhotoFiles: this.normalizePhotos(row)
             }))
+            this.recProcessName = (this.list.records[0] && this.list.records[0].recProcessName) || ''
+          } else {
+            this.recProcessName = ''
           }
         }
         this.updateTime = this.formatNow()
@@ -146,11 +153,24 @@ export default {
   }
 }
 
+.process-name-bar {
+  background: #fff;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 16px;
+  margin-bottom: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #303133;
+  border-bottom: 1px solid #ebeef5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
 .table-section {
   background: #fff;
-  border-radius: 8px;
+  border-radius: 0 0 8px 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   padding: 8px;
+  margin-top: 0;
 }
 
 .list-main {
