@@ -91,7 +91,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item :label="'油漆工艺'">
+          <el-form-item :label="'表面工艺'">
             <el-input v-model="form.productPaint" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>

@@ -46,10 +46,13 @@ export default {
       updateTime: '',
       columns: [
         { text: '子订单号', name: 'poSubNo', width: '120px' },
+        { text: '客户名称', name: 'custName', width: '120px' },
         { text: '部件名称', name: 'departName', width: '120px' },
         { text: '产品部件数量', name: 'deptQty', width: '110px' },
         { text: '接收时间', name: 'receiveDate', width: '110px' },
         { text: '开工日期', name: 'startDate', width: '110px' },
+        { text: '表面工艺', name: 'productPaint', width: '110px' },
+        { text: '备注', name: 'note', width: '120px' },
         { text: '预警天数', name: 'warnningDays', width: '90px' },
         { text: '预警剩余天数', name: 'warnningRemainDays', width: '110px' },
         { text: '收工序图片', name: 'recPhotoFiles', default: 'images', width: '100px' }

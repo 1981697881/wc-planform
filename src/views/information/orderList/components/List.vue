@@ -45,7 +45,7 @@ export default {
         { text: '产品名称详细', name: 'prodShortName' },
         { text: '产品名称', name: 'productName' },
         { text: '材质', name: 'productTxture' },
-        { text: '油漆工艺', name: 'productPaint' },
+        { text: '表面工艺', name: 'productPaint' },
         { text: '下单日期', name: 'poDate' },
         { text: '预计交货日期', name: 'deliveryDate' },
         { text: '交货日期', name: 'orderDate' },
