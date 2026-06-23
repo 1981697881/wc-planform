@@ -39,7 +39,7 @@ export default {
         { text: '五金单', name: 'wuJin' },
         { text: '母订单号', name: 'poNo' },
         { text: '子订单号', name: 'subPoNo' },
-        { text: '客户代码', name: 'custCode' },
+        { text: '客户代码', name: 'custNumber' },
         { text: '客户名称', name: 'custName' },
         { text: '工地地址', name: 'workSiteAddr' },
         { text: '产品名称详细', name: 'prodShortName' },
