@@ -98,7 +98,7 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="16">
-          <el-form-item :label="'产品名称(简略)'">
+          <el-form-item :label="'产品名称(详细)'">
             <el-input v-model="form.prodShortName" :disabled="readonly"></el-input>
           </el-form-item>
         </el-col>
