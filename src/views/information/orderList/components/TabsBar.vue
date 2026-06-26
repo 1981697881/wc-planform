@@ -57,7 +57,7 @@
             ref="upload"
             :headers="headers"
             :show-file-list="false"
-            action="web/excel/import/goodsMMStock"
+            action="web/prodOrder/excelImport"
             class="upload-demo"
             multiple
             :auto-upload="false"
