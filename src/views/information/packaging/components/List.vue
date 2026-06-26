@@ -6,6 +6,7 @@
       :loading="loading"
       :list="list"
       index
+      type
       ref="list"
       @handle-size="handleSize"
       @handle-current="handleCurrent"
@@ -271,47 +272,58 @@ export default {
       return `${year}-${month}-${day}`
     },
 
-    printOrderTable(obj) {
-      this.orderTable = obj
-      this.$nextTick(() => {
-        const printContent = this.$refs.orderContent
+    async printOrderTable(objOrList) {
+      const items = Array.isArray(objOrList) ? objOrList : [objOrList]
+      if (!items.length) {
+        this.$message.warning('请至少选择一条数据')
+        return
+      }
 
-        const printWindow = window.open('', '_blank');
-        if (!printWindow) {
-          alert('请允许弹出窗口以进行打印')
-          return
-        }else{
-          printWindow.onload = function() {
-            printWindow.moveTo(0, 0);
-            printWindow.resizeTo(screen.availWidth, screen.availHeight);
-          };
-        }
+      let pagesHTML = ''
+      for (let i = 0; i < items.length; i++) {
+        this.orderTable = items[i]
+        await this.$nextTick()
+        const pageBreak = i < items.length - 1 ? ' style="page-break-after: always;"' : ''
+        pagesHTML += `<div class="order-print-page"${pageBreak}>${this.$refs.orderContent.innerHTML}</div>`
+      }
 
-        printWindow.document.write(`
-          <!DOCTYPE html>
-          <html>
-          <head>
-            <title>订单包装明细表</title>
-            <style>
-              ${this.getOrderPrintStyles()}
-            </style>
-          </head>
-          <body>
-            ${printContent.innerHTML}
-            <script>
-              window.onload = function() {
-                window.print();
-                setTimeout(function() {
-                  window.close();
-                }, 100);
-              };
-            <\/script>
-          </body>
-          </html>
-        `)
+      const printWindow = window.open('', '_blank')
+      if (!printWindow) {
+        alert('请允许弹出窗口以进行打印')
+        return
+      }
+      printWindow.onload = function() {
+        printWindow.moveTo(0, 0)
+        printWindow.resizeTo(screen.availWidth, screen.availHeight)
+      }
 
-        printWindow.document.close()
-      })
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>订单包装明细表</title>
+          <style>
+            ${this.getOrderPrintStyles()}
+            .order-print-page {
+              page-break-inside: avoid;
+            }
+          </style>
+        </head>
+        <body>
+          ${pagesHTML}
+          <script>
+            window.onload = function() {
+              window.print();
+              setTimeout(function() {
+                window.close();
+              }, 100);
+            };
+          <\/script>
+        </body>
+        </html>
+      `)
+
+      printWindow.document.close()
     },
     generateQRCode(text) {
       // 使用在线QR码生成服务

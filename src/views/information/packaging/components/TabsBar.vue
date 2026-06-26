@@ -214,7 +214,14 @@ export default {
       }
     },
     printOrderTable() {
-      this.$emit('printOrderTable', this.clickData)
+      if (!this.selections || this.selections.length === 0) {
+        this.$message({
+          message: '请至少选择一条数据',
+          type: 'warning'
+        })
+        return
+      }
+      this.$emit('printOrderTable', this.selections)
     },
     printLabel() {
       this.$emit('printLabel', this.clickData)
