@@ -49,7 +49,7 @@
                      :icon="t.cuicon" @click="onFun(t.path)">{{t.menuName}}
           </el-button>
           <el-upload
-            name="order"
+            name="po"
             :on-success="uploadSuccess"
             :on-error="uploadError"
 
