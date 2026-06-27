@@ -8,6 +8,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
+          <el-form-item :label="'客户代码'">
+            <el-input v-model="search.custNumber" placeholder="客户代码"/>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
           <el-form-item :label="'工程地址'">
             <el-input v-model="search.workSiteAddr" placeholder="工程地址"/>
           </el-form-item>
@@ -84,6 +89,7 @@
         btnList: [],
         search: {
           itemName: null,
+          custNumber: null,
           workSiteAddr: null,
         }
       };
@@ -108,6 +114,7 @@
       qFilter() {
         let obj = {}
         this.search.itemName != null && this.search.itemName != '' ? obj.itemName = this.search.itemName : null
+        this.search.custNumber != null && this.search.custNumber != '' ? obj.custNumber = this.search.custNumber : null
         this.search.workSiteAddr != null && this.search.workSiteAddr != '' ? obj.workSiteAddr = this.search.workSiteAddr : null
         this.value != null && this.value != undefined ? obj.endDate = this.value[1] : null
         this.value != null && this.value != undefined ? obj.startDate = this.value[0] : null
@@ -124,6 +131,7 @@
       },
       upload() {
         this.search.itemName = ''
+        this.search.custNumber = ''
         this.search.workSiteAddr = ''
         this.value = ''
         this.$emit('uploadList')

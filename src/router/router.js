@@ -18,6 +18,7 @@ const map = {
 
   'processFlow': () => import('@/views/reportForm/processFlow'),
   'orderCompleted': () => import('@/views/reportForm/orderCompleted'),
+  'orderDelivery': () => import('@/views/reportForm/orderDelivery'),
   'processAcceptance': () => import('@/views/reportForm/processAcceptance'),
 
   'leaderDashboard': () => import('@/views/reportForm/leaderDashboard'),

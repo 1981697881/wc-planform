@@ -35,6 +35,7 @@ export default {
         {text: '客户要求日期', name: 'custReqDate'},
         {text: '订单号', name: 'poNo'},
         {text: '子订单号', name: 'poSubNo'},
+        {text: '客户代码', name: 'custNumber'},
         {text: '客户名称', name: 'custName'},
         {text: '工程地址', name: 'workSiteAddr'},
         {text: '五金单', name: 'wuJin'},

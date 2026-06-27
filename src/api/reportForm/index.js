@@ -84,6 +84,20 @@ export function processLeadBoardReportByPage(params, query = {}) {
   })
 }
 
+// 报表管理-订单交付情况报表
+export function poDeliveryReport(params, query) {
+  const url = '/prodOrder/poDeliveryReportByPage/' + params.pageNum + '/' + params.pageSize
+  return request({
+    url: url,
+    headers: {
+      'authorization': getToken('wcrx'),
+      'Content-Type': 'application/json'
+    },
+    method: 'POST',
+    data: query
+  })
+}
+
 // 报表看板-收工序后还未交出去的订单看板报表（分页）
 export function processNotSendBoardReportByPage(params, query = {}) {
   const url = '/prodProcess/processNotSendBoardReportByPage/' + params.pageNum + '/' + params.pageSize
