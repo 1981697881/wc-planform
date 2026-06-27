@@ -86,9 +86,11 @@ export default {
     },
     exportData() {
       this.$refs.list.ExportData()
+    },
     printOrderTable(selections) {
       this.$refs.list.printOrderTable(selections)
-    },printLabel(obj) {
+    },
+    printLabel(obj) {
       this.$refs.list.openComponentMsgMsgBox(obj)
     },
     delivery(obj) {
