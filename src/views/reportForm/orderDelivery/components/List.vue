@@ -36,9 +36,9 @@ export default {
         { text: '母订单号', name: 'poNo'},
         { text: '子订单号', name: 'poSubNo'},
         { text: '产品位置', name: 'productPosition'},
-        { text: '产品明细(部件名称)', name: 'itemName', width: '180px' },
+        { text: '产品明细(部件名称)', name: 'departName', width: '180px' },
         { text: '箱号', name: 'boxNo'},
-        { text: '发货时间', name: 'sendDate', width: '110px' }
+        { text: '发货时间', name: 'sendOutDate', width: '110px' }
       ]
     }
   },
