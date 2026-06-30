@@ -84,16 +84,22 @@
       </template>
       <slot name="after"></slot>
     </el-table>
-    <div class="text-center pages" v-if="list.total && list.total!=0" style="padding-top: 15px;">
+    <div
+      class="text-center pages"
+      :class="{ 'is-all-page-size': isAllPageSize }"
+      v-if="list.total && list.total!=0"
+      style="padding-top: 15px;"
+    >
       <el-pagination
         @size-change="handleSize"
         @current-change="handleCurrent"
         :current-page="list.current"
-        :page-sizes="[50, 100, 250, 500, 1000, 2500]"
+        :page-sizes="pageSizes"
         :page-size="list.size"
         :page-count="list.pages?list.pages:0"
         layout="total, sizes, prev, pager, next, jumper"
         :total="list.total?list.total:0"
+        :popper-class="showAllOption ? 'list-page-size-popper' : ''"
       ></el-pagination>
     </div>
   </div>
@@ -178,8 +184,28 @@
   data() {
     return {
       methods: this.$options.methods,
-      fileUrl: this.$store.state.user.url + '/images/',
+      fileUrl: this.$store.state.user.url + '/images/'
     };
+  },
+  computed: {
+    pageSizes() {
+      const preset = [50, 100, 250, 500, 1000, 2500]
+      const total = Number(this.list.total) || 0
+      if (total > 0 && !preset.includes(total)) {
+        return [...preset, total]
+      }
+      return preset
+    },
+    showAllOption() {
+      const total = Number(this.list.total) || 0
+      const preset = [50, 100, 250, 500, 1000, 2500]
+      return total > 0 && !preset.includes(total)
+    },
+    isAllPageSize() {
+      const total = Number(this.list.total) || 0
+      const size = Number(this.list.size) || 0
+      return total > 0 && size >= total
+    }
   },
   methods: {
     // 新增：根据预警状态返回单元格样式类名
@@ -380,5 +406,34 @@
 
   .suspended-row2 {
     color: blue;
+  }
+</style>
+<style>
+  .list-page-size-popper .el-select-dropdown__item:last-child span {
+    font-size: 0;
+  }
+
+  .list-page-size-popper .el-select-dropdown__item:last-child::before {
+    content: '全部';
+    font-size: 14px;
+  }
+
+  .is-all-page-size .el-pagination__sizes {
+    position: relative;
+  }
+
+  .is-all-page-size .el-pagination__sizes .el-input__inner {
+    color: transparent;
+  }
+
+  .is-all-page-size .el-pagination__sizes::after {
+    content: '全部';
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #606266;
+    pointer-events: none;
   }
 </style>
