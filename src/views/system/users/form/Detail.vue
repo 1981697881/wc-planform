@@ -122,6 +122,7 @@ export default {
       },
       value: false,
       Checkeds: [],
+      pendingMids: null,
       processList: [],
       form: {
         uid: null,
@@ -193,8 +194,32 @@ export default {
       console.log(tab, event)
     },
     getChecked() {
-      let array = this.$refs.tree1.getCheckedKeys()
-      return array
+      const tree = this.$refs.tree1
+      if (!tree) return []
+      return tree.getCheckedKeys().concat(tree.getHalfCheckedKeys())
+    },
+    filterLeafCheckedKeys(mids) {
+      if (!mids || !mids.length) return []
+      const parentIds = new Set()
+      const walk = (nodes) => {
+        (nodes || []).forEach(node => {
+          if (node.children && node.children.length) {
+            parentIds.add(node.menuId)
+            walk(node.children)
+          }
+        })
+      }
+      walk(this.data)
+      return mids.filter(id => !parentIds.has(id))
+    },
+    setTreeCheckedKeys(mids) {
+      const keys = this.filterLeafCheckedKeys(mids)
+      this.Checkeds = keys
+      this.$nextTick(() => {
+        if (this.$refs.tree1) {
+          this.$refs.tree1.setCheckedKeys(keys)
+        }
+      })
     },
     saveData(form) {
       this.$refs[form].validate((valid) => {
@@ -263,6 +288,10 @@ export default {
     fetchMenu() {
       getMenuList().then(res => {
         this.data = res.data.treeVoList
+        if (this.pendingMids) {
+          this.setTreeCheckedKeys(this.pendingMids)
+          this.pendingMids = null
+        }
       })
     },
     fetchData(val) {
@@ -271,7 +300,12 @@ export default {
           this.form = res.data
           let rows = this.list
           let group = res.data.gids
-          this.Checkeds = res.data.mids
+          const mids = res.data.mids || []
+          if (this.data.length) {
+            this.setTreeCheckedKeys(mids)
+          } else {
+            this.pendingMids = mids
+          }
           if (rows) {
             rows.forEach(row => {
               for (const i in group) {
