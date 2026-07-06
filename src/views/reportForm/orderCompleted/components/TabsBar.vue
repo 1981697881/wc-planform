@@ -46,6 +46,16 @@
           <el-button :size="'mini'" type="primary" icon="el-icon-refresh"    @click="upload">刷新</el-button>
         </el-button-group>
       </el-row>
+      <el-row :gutter="10">
+        <el-col :span="8">
+          <el-form-item label="是否有总装信息" label-width="120px">
+            <el-radio-group v-model="search.hasAssemblyInfo" @change="changeAssemblyInfo">
+              <el-radio :label="1">有</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
     </el-form>
   </div>
 </template>
@@ -91,6 +101,7 @@
           itemName: null,
           custNumber: null,
           workSiteAddr: null,
+          hasAssemblyInfo: null,
         }
       };
     },
@@ -107,6 +118,9 @@
         this.search.type = val
         this.$emit('queryBtn', this.qFilter())
       },
+      changeAssemblyInfo() {
+        this.$emit('queryBtn', this.qFilter())
+      },
       onFun(method){
         this[method]()
       },
@@ -116,6 +130,9 @@
         this.search.itemName != null && this.search.itemName != '' ? obj.itemName = this.search.itemName : null
         this.search.custNumber != null && this.search.custNumber != '' ? obj.custNumber = this.search.custNumber : null
         this.search.workSiteAddr != null && this.search.workSiteAddr != '' ? obj.workSiteAddr = this.search.workSiteAddr : null
+        if (this.search.hasAssemblyInfo === 1 || this.search.hasAssemblyInfo === 0) {
+          obj.hasAssemblyInfo = this.search.hasAssemblyInfo
+        }
         this.value != null && this.value != undefined ? obj.endDate = this.value[1] : null
         this.value != null && this.value != undefined ? obj.startDate = this.value[0] : null
         return obj
@@ -133,6 +150,7 @@
         this.search.itemName = ''
         this.search.custNumber = ''
         this.search.workSiteAddr = ''
+        this.search.hasAssemblyInfo = null
         this.value = ''
         this.$emit('uploadList')
       },
