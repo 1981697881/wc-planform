@@ -47,12 +47,18 @@
         </el-button-group>
       </el-row>
       <el-row :gutter="10">
-        <el-col :span="8">
+        <el-col :span="4">
           <el-form-item label="是否有总装信息" label-width="120px">
-            <el-radio-group v-model="search.hasAssemblyInfo" @change="changeAssemblyInfo">
-              <el-radio :label="1">有</el-radio>
-              <el-radio :label="0">否</el-radio>
-            </el-radio-group>
+            <el-select
+              v-model="search.hasAssemblyInfo"
+              style="width: 100%"
+              placeholder="请选择"
+              @change="changeAssemblyInfo"
+            >
+              <el-option label="全部" :value="-1"/>
+              <el-option label="否" :value="0"/>
+              <el-option label="是" :value="1"/>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -101,7 +107,7 @@
           itemName: null,
           custNumber: null,
           workSiteAddr: null,
-          hasAssemblyInfo: null,
+          hasAssemblyInfo: -1,
         }
       };
     },
@@ -130,7 +136,7 @@
         this.search.itemName != null && this.search.itemName != '' ? obj.itemName = this.search.itemName : null
         this.search.custNumber != null && this.search.custNumber != '' ? obj.custNumber = this.search.custNumber : null
         this.search.workSiteAddr != null && this.search.workSiteAddr != '' ? obj.workSiteAddr = this.search.workSiteAddr : null
-        if (this.search.hasAssemblyInfo === 1 || this.search.hasAssemblyInfo === 0) {
+        if (this.search.hasAssemblyInfo === -1 || this.search.hasAssemblyInfo === 0 || this.search.hasAssemblyInfo === 1) {
           obj.hasAssemblyInfo = this.search.hasAssemblyInfo
         }
         this.value != null && this.value != undefined ? obj.endDate = this.value[1] : null
@@ -150,7 +156,7 @@
         this.search.itemName = ''
         this.search.custNumber = ''
         this.search.workSiteAddr = ''
-        this.search.hasAssemblyInfo = null
+        this.search.hasAssemblyInfo = -1
         this.value = ''
         this.$emit('uploadList')
       },
