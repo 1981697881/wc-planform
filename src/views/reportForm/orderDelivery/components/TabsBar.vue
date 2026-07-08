@@ -19,7 +19,7 @@
           <el-button v-for="(t,i) in btnList" :key="i" v-if="t.category == 'default'" :size="'mini'" type="primary"
                      :icon="t.cuicon" @click="onFun(t.path)">{{ t.menuName }}
           </el-button>
-          <el-button :size="'mini'" type="primary" icon="el-icon-download" @click="exportData">导出</el-button>
+          <!-- <el-button :size="'mini'" type="primary" icon="el-icon-download" @click="exportData">导出</el-button> -->
           <el-button :size="'mini'" type="primary" icon="el-icon-refresh" @click="upload">刷新</el-button>
         </el-button-group>
       </el-row>
