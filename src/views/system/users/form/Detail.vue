@@ -81,6 +81,7 @@
               :default-expand-all="false"
               :data="data"
               show-checkbox
+              check-strictly
               :default-checked-keys="Checkeds"
               node-key="menuId"
               highlight-current
@@ -196,24 +197,10 @@ export default {
     getChecked() {
       const tree = this.$refs.tree1
       if (!tree) return []
-      return tree.getCheckedKeys().concat(tree.getHalfCheckedKeys())
-    },
-    filterLeafCheckedKeys(mids) {
-      if (!mids || !mids.length) return []
-      const parentIds = new Set()
-      const walk = (nodes) => {
-        (nodes || []).forEach(node => {
-          if (node.children && node.children.length) {
-            parentIds.add(node.menuId)
-            walk(node.children)
-          }
-        })
-      }
-      walk(this.data)
-      return mids.filter(id => !parentIds.has(id))
+      return tree.getCheckedKeys()
     },
     setTreeCheckedKeys(mids) {
-      const keys = this.filterLeafCheckedKeys(mids)
+      const keys = mids || []
       this.Checkeds = keys
       this.$nextTick(() => {
         if (this.$refs.tree1) {
