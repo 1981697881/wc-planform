@@ -36,6 +36,7 @@ export default {
         { text: "客户名称", name: "custName" },
         { text: "工程地址", name: "workSiteAddr" },
         { text: "产品名称", name: "itemName" },
+        { text: "部件名称", name: "departName" },
         { text: "备料工序", name: "备料工序"},
         { text: "木工工序", name: "木工工序"},
         { text: "粗磨工序", name: "粗磨工序"},
